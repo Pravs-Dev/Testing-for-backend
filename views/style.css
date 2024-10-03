@@ -766,11 +766,9 @@ button[type="submit"]:hover {
 
 
 .avail {
-    width: 100%;
-    max-width: 600px;
     background-color: white;
     padding: 20px;
-    border-radius: 50px;
+    border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -1072,4 +1070,16 @@ body.dark-theme {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.availability-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Ensures the cards are aligned properly */
+}
+
+.slot {
+    display: flex;
+    flex-direction: row;
 }
