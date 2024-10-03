@@ -942,9 +942,13 @@ body.dark-theme {
 }
 
 .session-highlighted {
-    background-color: white;
-    color: black;
-    padding: 10px;
+    width: 80%; /* Increase the width to 80% of the screen */
+    max-width: 1000px; /* Limit the max width for larger screens */
+    background-color:white; /* Keep your blue background color */
+    padding: 40px; /* Increase padding for a more spacious layout */
+    border-radius: 20px; /* Keep rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    margin: 20px auto; /* Center the form with auto margin */
 
 }
 
@@ -1041,3 +1045,31 @@ body.dark-theme {
     background-color: #357ae8;
 }
 
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.card {
+    height: 60vh; /* Makes the card height 60% of the viewport height */
+    width: 200px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.session-list {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
