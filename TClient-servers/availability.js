@@ -22,12 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         const displayAvailabilitys = (availability) => {
-            availabilityList.innerHTML = '';
+            availabilityList.innerHTML = `
+                    <h3>Change this month's availability</h3>`;
                 const availabilityElement = document.createElement('form');
                 availabilityElement.classList.add('availability-card');
-                availabilityElement.innerHTML = `
-                    <h3>Change this month's availability</h3>
-                `;
+                availabilityElement.innerHTML = ``;
                 let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 let daysLeft = availabileDays();
                 for(let i=0; i<daysLeft.length; i++) {
