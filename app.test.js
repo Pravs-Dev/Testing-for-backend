@@ -365,6 +365,7 @@ describe('Virtual Tutoring Unit Tests', () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body.message).toBe('Notification deleted successfully');
     });
+    
     afterAll((done) => {
       mongoose.connection.close();
       done();
