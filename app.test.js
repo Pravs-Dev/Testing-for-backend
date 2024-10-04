@@ -54,6 +54,36 @@ app.get('/test', (req, res) => {
 let userId; // Global variable to store the user ID
 let TutorId;
 
+function generateRandomPassword() {
+  // Character sets
+  let length = 12;
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
+  const specialCharacters = '@$!%*?&';
+
+  // Ensure the password has at least one character from each set
+  const passwordArray = [
+    lowercase[Math.floor(Math.random() * lowercase.length)],
+    uppercase[Math.floor(Math.random() * uppercase.length)],
+    numbers[Math.floor(Math.random() * numbers.length)],
+    specialCharacters[Math.floor(Math.random() * specialCharacters.length)],
+  ];
+
+  // Fill the rest of the password length with a mix of all characters
+  const allCharacters = lowercase + uppercase + numbers + specialCharacters;
+  for (let i = passwordArray.length; i < length; i++) {
+    passwordArray.push(allCharacters[Math.floor(Math.random() * allCharacters.length)]);
+  }
+
+  // Shuffle the password array to prevent predictable patterns
+  const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
+  return shuffledPassword;
+}
+
+
+
+
 describe('User Unit Tests', () => {
 
   const randomEmail = () => `test${Math.floor(Math.random() * 100000)}@example.com`;
@@ -77,7 +107,7 @@ describe('User Unit Tests', () => {
   it('should create a new user', async () => {
     const newUser = {
       email: randomEmail(), // Generate a random email
-      password: 'password123',
+      password: generateRandomPassword(),
       fname: randomName(), // Generate a random first name
       lname: 'Doe',
       role: 'student'
@@ -93,7 +123,7 @@ describe('User Unit Tests', () => {
   it('should create a new Tutor', async () => {
     const newUser = {
       email: TrandomEmail(), // Generate a random email
-      password: 'password562',
+      password: generateRandomPassword(),
       fname: TrandomName(), // Generate a random first name
       lname: 'Doeer',
       role: 'tutor'
