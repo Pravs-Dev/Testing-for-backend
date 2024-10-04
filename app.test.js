@@ -293,11 +293,89 @@ describe('Virtual Tutoring Unit Tests', () => {
       expect(res.body.message).toBe('Booking deleted successfully');
     });
   
+
+  });
+  
+
+  describe('Notifications Unit Test', () => {
+    let notificationId;
+    const userId = '66d3c6bea7133bbc3a897ec1'; // Sample user ID
+  
+    beforeAll(async () => {
+      const newNotification = {
+        message: 'New Message',
+        user: userId,
+      };
+  
+      const res = await request(app).post('/api/notifications').send(newNotification);
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('_id');
+      notificationId = res.body._id; // Store notificationId for use in other tests
+    });
+  
+    it('should create a new notification', async () => {
+      const newNotification = {
+        message: 'Appointment Reminder',
+        user: userId,
+      };
+  
+      const res = await request(app).post('/api/notifications').send(newNotification);
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('_id');
+      expect(res.body.message).toBe(newNotification.message);
+      expect(res.body.user).toBe(newNotification.user);
+      expect(res.body.read).toBe(false); // Ensure the default read value is false
+    });
+
+    it('should get all notifications for a user', async () => {
+      const res = await request(app).get('/api/notifications?user=66d3c6bea7133bbc3a897ec1');
+      expect(res.statusCode).toEqual(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
+  
+    it('should get a notification by ID', async () => {
+      const res = await request(app).get(`/api/notifications/${notificationId}`);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('_id', notificationId);
+    });
+    it('should return an error if message is missing', async () => {
+      const newNotification = {
+        user: userId,
+      };
+  
+      const res = await request(app).post('/api/notifications').send(newNotification);
+      expect(res.statusCode).toEqual(500); // Assuming you handle validation errors
+      expect(res.body.message).toBe('Error creating notification');
+    });
+    it('should mark a notification as read', async () => {
+      const res = await request(app).put(`/api/notifications/read/${notificationId}`);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('_id', notificationId);
+      expect(res.body.read).toBe(true); // Assuming markNotificationAsRead updates the read status to true
+    });
+  
+    it('should return 500 if notification not found when marking as read', async () => {
+      const res = await request(app).put('/api/notifications/read/invalidId'); // Use an invalid ID
+      expect(res.statusCode).toEqual(500);
+      expect(res.body.message).toBe('Error updating notification');
+    });
+  
+    it('should delete a notification', async () => {
+      const res = await request(app).delete(`/api/notifications/${notificationId}`);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.message).toBe('Notification deleted successfully');
+    });
+  
+    it('should return 500 if notification not found when deleting', async () => {
+      const res = await request(app).delete('/api/notifications/invalidId'); // Use an invalid ID
+      expect(res.statusCode).toEqual(500);
+      expect(res.body.message).toBe('Error deleteing notification');
+    });
     afterAll((done) => {
       mongoose.connection.close();
       done();
     });
   });
-  
+
 
 });
