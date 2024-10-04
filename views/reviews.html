@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reviews</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="../frontC/FeedbackController.js"></script>
 </head>
 <body>
     <div class="container">
@@ -24,17 +25,48 @@
             </nav>
         </aside>
 
-    <app-header></app-header>
-    <app-sidebar></app-sidebar>
-    <div id = "content" class="main-content">
-        <h1>Feedback from students will appear here</h1>
-        <div id = "review-list"></div>
+        <!-- Main Content -->
+        <main class="content">
+            <header class="header">
+                <h1>Reviews</h1>
+            </header>
+            
+            <section class="reviews">
+                <div class="review-card">
+                    <h2>Course: Mathematics 101</h2>
+                    <p>Student: John Doe</p>
+                    <div class="stars">
+                        <span class="star filled">&#9733;</span>
+                        <span class="star filled">&#9733;</span>
+                        <span class="star filled">&#9733;</span>
+                        <span class="star filled">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                    </div>
+                    <p>Comment: Great explanation and very patient.</p>
+                </div>
+                
+                <div class="review-card">
+                    <h2>Course: Physics 202</h2>
+                    <p>Student: Jane Smith</p>
+                    <div class="stars">
+                        <span class="star filled">&#9733;</span>
+                        <span class="star filled">&#9733;</span>
+                        <span class="star filled">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                        <span class="star">&#9733;</span>
+                    </div>
+                    <p>Comment: Good session, but could cover more material.</p>
+                </div>
+                
+                <!-- Add more review cards as needed -->
+            </section>
+            
+        </main>
+        <footer class="footer">
+            <p>Campus Tutoring App</p>
+        </footer>
     </div>
-
-    
-
-    <script src="./theaderFooter.js"></script>
     <script src="../Client-servers/login.js"></script>
-    <script src="../TClient-servers/review.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>

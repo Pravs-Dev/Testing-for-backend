@@ -30,26 +30,16 @@
                 </select>
 
                 <!-- Session Date -->
-                <div>
-                    <span id="calendarIcon" style="cursor: pointer; margin-left: 5px;">📅</span>
-                    <label for="sessionDate">Session Date:</label>
-                    <input id="sessionDate" name="sessionDate" class="form-input" required>
-                </div>
+                <label for="sessionDate">Session Date:</label>
+                <input type="date" id="sessionDate" name="sessionDate" class="form-input" required>
+
                 <!-- Session Time -->
                 <label for="sessionTime">Session Time:</label>
-                <select id="sessionTime" name="sessionTime" class="form-input" required>
-                    <option value="">Select a Time</option>
-                </select>
+                <input type="time" id="sessionTime" name="sessionTime" class="form-input" required>
+
                 <!-- Duration -->
                 <label for="duration">Session Duration (hours):</label>
-                <input type="number" id="duration" name="duration" class="form-input" min="1" max="2" required>
-
-                <label for="meetingtype">Booking Type:</label>
-                <select id="meetingtype" name="meetingtype" class="form-select" required>
-                    <option value="In-person">In Person</option>
-                    <option value="Online">Online</option>
-                    <option value="Individual">Individual</option>
-                </select>
+                <input type="number" id="duration" name="duration" class="form-input" min="1" max="8" required>
 
                 <label for="meetingtype">Booking Type:</label>
                 <select id="meetingtype" name="meetingtype" class="form-select" required>

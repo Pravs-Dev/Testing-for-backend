@@ -27,7 +27,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    width: 100%; 
+    width: 100%;
     height: 90px;
     position: fixed;
     top: 0;
@@ -961,3 +961,447 @@ input:checked + .slider:before {
     /* Ensure any other elements are adjusted to fit smaller screens */
 }
 
+
+
+.tutor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Ensures the cards are aligned properly */
+}
+
+/* Flexbox for each tutor card */
+.tutor-card {
+    display: flex;
+    flex-direction: column;
+    width: 300px; /* Set a fixed width for the card */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tutor-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for the profile picture in a circle */
+.tutor-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 20px;
+}
+
+.tutor-details {
+    padding: 10px 20px;
+    flex-grow: 1;
+}
+
+.tutor-details h3 {
+    margin: 0 0 10px;
+}
+
+.tutor-details p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+/* Existing styles... */
+
+/* Tutor details modal styles */
+.tutor-details-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tutor-details-content {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+}
+
+.tutor-details-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tutor-profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.tutor-details-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.tutor-availability {
+    font-size: 18px;
+}
+
+.availability-time {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+/* Hide the modal by default */
+.hidden {
+    display: none;
+}
+
+
+
+/* Adjust form input widths */
+.form-group {
+    margin-bottom: 15px;
+    width: 100%; /* Ensure form-group spans the entire width */
+    max-width: 600px; /* Set a max width to control input size */
+    margin: 0 auto; /* Center the form */
+}
+
+
+form input {
+    width: 100%;
+    padding: 10px; /* Increase padding for better user experience */
+    font-size: 16px; /* Increase font size */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+
+.profile-picture {
+    border-radius: 50%;
+    width: 150px; /* Adjust size */
+    height: 150px; /* Adjust size */
+    object-fit: cover; /* Make sure the image fits within the circle */
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Centering the form */
+form {
+    text-align: center; /* Center align the form */
+}
+
+/* Update button */
+button[type="submit"] {
+    background-color: #62b1f6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #4a9ed6;
+}
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Notifications Container - Full Page Styling */
+.notifications-container {
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 70%; /* Make the container take up almost the full page width */
+    height: 90vh; /* Take up almost the full viewport height */
+    margin: 20px auto; /* Center it horizontally */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+    margin-left: 250px;
+}
+
+/* Make the container responsive */
+@media (max-width: 768px) {
+    .notifications-container {
+        width: 95%; /* Reduce width slightly for smaller screens */
+        padding: 20px;
+        height: 80vh; /* Adjust height on smaller screens */
+    }
+}
+
+/* Notifications Header */
+/* Notifications Container - Full Page Styling */
+.notifications-container {
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 70%; /* Make the container take up almost the full page width */
+    height: 90vh; /* Take up almost the full viewport height */
+    margin: 20px auto; /* Center it horizontally */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+    margin-left: 250px;
+}
+
+/* Make the container responsive */
+@media (max-width: 768px) {
+    .notifications-container {
+        width: 95%; /* Reduce width slightly for smaller screens */
+        padding: 20px;
+        height: 80vh; /* Adjust height on smaller screens */
+    }
+}
+
+/* Notifications Header */
+.notifications-header {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Notification Cards */
+.notification {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.notification:hover {
+    background-color: #e6f7ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Read Notification Style */
+.notification.read {
+    background-color: #f0f0f0;
+    color: #888;
+}
+
+/* Notification Message */
+.notification-message {
+    font-size: 1.2em;
+    flex-grow: 1;
+    margin-right: 20px;
+    color: #333;
+}
+
+/* Mark as Read Button */
+.mark-read-btn {
+    padding: 10px 20px;
+    background-color: #39a6e0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mark-read-btn:hover {
+    background-color: #0f0f11;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification-bell {
+    position: relative;
+}
+
+.notification-dot {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none; /* Initially hidden */
+}
+
+.alert-section {
+    max-width: 1200px;
+    margin: auto;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+thead {
+    background-color: #d32f2f;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #ddd;
+}
+
+.bus-schedule-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+.bus-schedule-section h1 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+.bus-schedule-section p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Bus Schedule Cards */
+.bus-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bus-card .route-info {
+    flex-basis: 70%;
+}
+.bus-card .route-info h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #0056b3;
+}
+.bus-card .route-info p {
+    margin: 5px 0;
+    color: #333;
+}
+.bus-card .bus-status {
+    flex-basis: 30%;
+    text-align: right;
+}
+.bus-card .bus-status span {
+    background-color: #28a745;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+.bus-card .bus-status span.delayed {
+    background-color: #dc3545;
+}
+
+/* Stops Table */
+.bus-stops {
+    margin-top: 15px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.bus-stops th, .bus-stops td {
+    padding: 10px;
+    text-align: left;
+}
+.bus-stops th {
+    background-color: #007bff;
+    color: white;
+}
+.bus-stops td {
+    border-bottom: 1px solid #ddd;
+}
+.bus-stops tr:last-child td {
+    border-bottom: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .bus-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .bus-card .bus-status {
+        text-align: left;
+        margin-top: 10px;
+    }
+}
+
+.delete-profile-container {
+    display: flex;                 /* Use flexbox */
+    justify-content: center;       /* Center horizontally */
+    align-items: center;           /* Center vertically if needed */
+    height: 100%;                  /* Set height if needed */
+}

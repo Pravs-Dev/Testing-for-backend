@@ -14,10 +14,6 @@ class AppHeader extends HTMLElement {
                     </a>
                 </li>
                 <li><a href="bus-schedule.html"><img src="./Icons/bus.svg" alt="Bus" width="30px"></a></li>
-<<<<<<< HEAD
-=======
-                 <li><a href="csessions.html"><img src="./Icons/sessions.svg" alt="Sessions" width="30px"></a></li>
->>>>>>> origin/Tutoring
             </ul>
             <ul class="account-link">
                 <a href="Profile.html" id="profile-link">
@@ -139,10 +135,6 @@ class AppSidebar extends HTMLElement {
     this.querySelector('#logout').addEventListener('click', () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
-
-      localStorage.removeItem('selectedTutor');
-      localStorage.removeItem('selectedSubject');
-      localStorage.removeItem('role');
       window.location.href = './login.html';
     });
 

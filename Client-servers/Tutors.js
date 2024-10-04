@@ -110,15 +110,15 @@ function filterTSections() {
 
 
 // TutorDetails.js
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async function() {
     const token = localStorage.getItem('token');
     const selectedTutor = JSON.parse(localStorage.getItem('selectedTutor'));
-
     // Populate tutor details on the profile page
     document.getElementById('profile-name').textContent = `${selectedTutor.fname} ${selectedTutor.lname}`;
-    document.getElementById('profile-email').innerHTML = `${selectedTutor.email}`;
+     document.getElementById('profile-email').innerHTML = `${selectedTutor.email}`;
     document.getElementById('profile-subjects').innerHTML = `<strong>Subjects:</strong> ${selectedTutor.subjects.join(', ')}`;
     document.getElementById('profile-qualifications').innerHTML = `<strong>Qualifications:</strong> ${selectedTutor.qualifications.join(', ')}`;
+    document.getElementById('profile-about').textContent = selectedTutor.about || 'No details available.';
 
     // Fetch and display tutor's profile picture
     const profilePictureElement = document.getElementById('profile-picture');
@@ -142,137 +142,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         profilePictureElement.src = defaultProfilePicture;
     }
 
-    // Fetch and display tutor availability
-    await fetchAndDisplayAvailability(selectedTutor._id);
-
     // Add event listener to the "Book a Session" button
     document.getElementById('book-session').addEventListener('click', () => {
-        const selectedDay = localStorage.getItem('selectedDay');
-        const selectedTime = localStorage.getItem('selectedTime');
-
-        if (selectedDay && selectedTime) {
-            localStorage.setItem('selectedTutor', JSON.stringify(selectedTutor));
-            localStorage.setItem('selectedSubject', selectedTutor.subjects[0]);
-            window.location.href = './bookings.html';
-        } else {
-            alert('Please select a day and time before booking.');
-        }
+        // Save selected tutor name and subject to localStorage
+        localStorage.setItem('selectedTutor', JSON.stringify(selectedTutor));
+        localStorage.setItem('selectedSubject', selectedTutor.subjects[0]); // Assuming you want the first subject
+    
+        // Navigate to booking page
+        window.location.href = './bookings.html';
     });
 });
-
-// Function to fetch and display tutor availability
-async function fetchAndDisplayAvailability(tutorId) {
-    const token = localStorage.getItem('token');
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/availability/${tutorId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.ok) {
-            const availabilityData = await response.json();
-            console.log('Availability Data:', availabilityData); // Log the data structure
-            // Check if there's at least one tutor's availability in the array
-            if (availabilityData.length > 0) {
-                displayAvailability(availabilityData[0]); // Pass the first tutor's availability
-            } else {
-                console.error('No availability data found for this tutor.');
-            }
-        } else {
-            console.error('Failed to fetch availability', response.status, response.statusText);
-        }
-    } catch (error) {
-        console.error('Error fetching availability:', error);
-    }
-}
-
-function displayAvailability(availabilityData) {
-    const availabilityContainer = document.createElement('div');
-    availabilityContainer.id = 'tutor-availability';
-
-    // Header for availability
-    const header = document.createElement('h2');
-    header.innerText = 'Availability';
-    availabilityContainer.appendChild(header);
-
-    // Create a table for displaying availability
-    const availabilityTable = document.createElement('table');
-    availabilityTable.classList.add('availability-table');
-
-    // Create table header
-    const tableHeader = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const dayHeader = document.createElement('th');
-    dayHeader.innerText = 'Day';
-    const slotsHeader = document.createElement('th');
-    slotsHeader.innerText = 'Time Slots';
-    
-    headerRow.appendChild(dayHeader);
-    headerRow.appendChild(slotsHeader);
-    tableHeader.appendChild(headerRow);
-    availabilityTable.appendChild(tableHeader);
-
-    // Create table body
-    const tableBody = document.createElement('tbody');
-
-    // Check if the data structure is correct
-    if (availabilityData && availabilityData.availability) {
-        availabilityData.availability.forEach(day => {
-            const dayRow = document.createElement('tr');
-            const dayCell = document.createElement('td');
-            dayCell.innerText = day.date;
-
-            const slotsCell = document.createElement('td');
-            if (Array.isArray(day.slots) && day.slots.length > 0) {
-                day.slots.forEach(slot => {
-                    if (slot.start && slot.end) {
-                        const slotElement = document.createElement('div');
-                        slotElement.innerText = `${slot.start} - ${slot.end}`;
-                        slotElement.classList.add('slot');
-
-                        // Add click event to the slot
-                        slotElement.addEventListener('click', () => {
-                            // Deselect previously selected slots
-                            const selectedSlots = document.querySelectorAll('.slot.selected');
-                            selectedSlots.forEach(slot => slot.classList.remove('selected'));
-                            
-                            // Select the clicked slot
-                            slotElement.classList.add('selected');
-                            // Store the selected day and time in local storage
-                            localStorage.setItem('selectedDay', day.date);
-                            localStorage.setItem('selectedTime', `${slot.start} - ${slot.end}`);
-                        });
-
-                        slotsCell.appendChild(slotElement);
-                    }
-                });
-                if (slotsCell.innerHTML === '') {
-                    slotsCell.innerText = 'No slots available.';
-                }
-            } else {
-                slotsCell.innerText = 'Slots data is not available.';
-            }
-
-            dayRow.appendChild(dayCell);
-            dayRow.appendChild(slotsCell);
-            tableBody.appendChild(dayRow);
-        });
-    } else {
-        availabilityContainer.innerText = 'No availability data found.';
-    }
-
-    availabilityTable.appendChild(tableBody);
-    availabilityContainer.appendChild(availabilityTable);
-
-    // Append availability details to the profile body
-    const profileBody = document.querySelector('.profile-body');
-    if (profileBody) {
-        profileBody.appendChild(availabilityContainer);
-    } else {
-        console.error('Profile body not found. Ensure that the selector is correct.');
-    }
-}
