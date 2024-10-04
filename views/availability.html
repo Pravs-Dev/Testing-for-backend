@@ -7,146 +7,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="dashboard">
-        <div class="container">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <nav class="Sidebar">
-                    <ul>
-                        <li><a href="tutor_dashboard.html">Dashboard</a></li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="availability.html">Availability</a></li>
-                        <li><a href="sessions.html">Upcoming sessions</a></li>
-                        <li><a href="resources.html">Resources</a></li>
-                        <li><a href="reviews.html" id="reviews">Reviews</a></li>
-                        <li><a href="settings.html">Settings</a></li>
-                    </ul>
-                </nav>
-            </aside>
-            
-            <!-- Main Content -->
-            <main class="content">
-                <header class="header">
-                    <input type="text" placeholder="Search your upcoming sessions here">
-                </header>
-                <h1>Set Your Availability</h1>
-                <form class="availability-form" id="availabilityForm">
-                    <div class="day-availability">
-                        <label for="monday">Monday:</label>
-                        <input type="time" id="monday-start" name="monday-start" disabled>
-                        <span>to</span>
-                        <input type="time" id="monday-end" name="monday-end" disabled>
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('monday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="tuesday">Tuesday:</label>
-                        <input type="time" id="tuesday-start" name="tuesday-start">
-                        <span>to</span>
-                        <input type="time" id="tuesday-end" name="tuesday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('tuesday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="wednesday">Wednesday:</label>
-                        <input type="time" id="wednesday-start" name="wednesday-start">
-                        <span>to</span>
-                        <input type="time" id="wednesday-end" name="wednesday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('wednesday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="thursday">Thursday:</label>
-                        <input type="time" id="thursday-start" name="thursday-start">
-                        <span>to</span>
-                        <input type="time" id="thursday-end" name="thursday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('thursday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="friday">Friday:</label>
-                        <input type="time" id="friday-start" name="friday-start">
-                        <span>to</span>
-                        <input type="time" id="friday-end" name="friday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('friday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="saturday">Saturday:</label>
-                        <input type="time" id="saturday-start" name="saturday-start">
-                        <span>to</span>
-                        <input type="time" id="saturday-end" name="saturday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('saturday')">
-                    </div>
-                    <div class="day-availability">
-                        <label for="sunday">Sunday:</label>
-                        <input type="time" id="sunday-start" name="sunday-start">
-                        <span>to</span>
-                        <input type="time" id="sunday-end" name="sunday-end">
-                        <img src="https://img.icons8.com/ios-glyphs/24/000000/edit.png" alt="Edit" class="edit-icon" onclick="editTime('sunday')">
-                    </div>
-                    <button type="submit">Save Availability</button>
-                </form>
-            </main>
-        </div>
-    </div>
-    <footer class = "footer">
-        <p>Campus Tutoring App</p>
-    </footer>
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
 
-    <script>
-        // Example of pre-loaded availability times
-        const savedAvailability = {
-            monday: { start: "09:00", end: "17:00" },
-            tuesday: { start: "09:00", end: "17:00" },
-            wednesday:  { start: "09:00", end: "17:00" },
-            thursday:  { start: "09:00", end: "17:00" },
-            friday:  { start: "09:00", end: "17:00" },
-            saturday:  { start: "09:00", end: "17:00" },
-            sunday:  { start: "09:00", end: "17:00" },
-        };
-
-        // Load saved times into the form
-        window.onload = function() {
-            for (let day in savedAvailability) {
-                if (savedAvailability[day]) {
-                    document.getElementById(day + '-start').value = savedAvailability[day].start;
-                    document.getElementById(day + '-end').value = savedAvailability[day].end;
-                    document.getElementById(day + '-start').disabled = true;
-                    document.getElementById(day + '-end').disabled = true;
-                }
-            }
-        };
-
-        // Enable editing for a specific day
-        function editTime(day) {
-            document.getElementById(day + '-start').disabled = false;
-            document.getElementById(day + '-end').disabled = false;
-        }
-
-        document.getElementById('availabilityForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Create the confirmation dialog
-            let confirmation = confirm("Are you sure you want to save your availability?");
-            
-            if (confirmation) {
-                // If the user clicks "Yes"
-                showSelectedAvailability();
-            }
-        });
-
-        function showSelectedAvailability() {
-            const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-            let availabilityMessage = "Your selected availability:\n";
-
-            days.forEach(day => {
-                const startTime = document.getElementById(day.toLowerCase() + '-start').value;
-                const endTime = document.getElementById(day.toLowerCase() + '-end').value;
-
-                if (startTime && endTime) {
-                    availabilityMessage += `${day}: ${startTime} to ${endTime}\n`;
-                }
-            });
-
-            alert(availabilityMessage); // Display the selected times
-            location.reload(); // Refresh the page to show the editable form again
-        }
-    </script>
+    <div class = "main-content" >
+        <div id = "availability-list"></div>   
+    </div> 
+    
+    <script src="../TClient-servers/availability.js"></script> 
+    <script src="./theaderFooter.js"></script>  
+    <script src="../Client-servers/login.js"></script>
 </body>
 </html>

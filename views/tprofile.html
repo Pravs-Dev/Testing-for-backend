@@ -5,17 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Include your CSS file -->
+    <link rel="stylesheet" href="style.css"> <!-- Include your CSS file -->
 </head>
 <body style="display: none;"> <!-- Hide body initially to prevent flash of unstyled content -->
     <div class="header">
-        <img class="logo" src="./Icons/logo.svg" alt="">
-        <input class="search" type="text" placeholder="Search"> 
+        <img class="logo" src="../Icons/logo.svg" alt="">
+        <input class="search" type="text" placeholder="Search">
         <ul>
-            <li><a href="notifications.html"><img src="./Icons/notifications.svg" alt="Notifications"></a></li>
-            <li><a href="bus-schedule.html"><img src="./Icons/bus.svg" alt="Bus" width="30px"></a></li>
-
-            <li><a href="csessions.html"><img src="./Icons/sessions.svg" alt="Sessions" width="30px"></a></li>
+            <li><a href="tnotifications.html"><img src="../Icons/notifications.svg" alt="Notifications"></a></li>
         </ul>
 
     </div>
@@ -24,7 +21,7 @@
 
     <div class="main-content">
         <header>
-            <img id="profile-picture" src="./Icons/profile2.jpg" alt="Profile Picture" class="profile-picture">
+            <img id="profile-picture" src="../Icons/profile2.jpg" alt="Profile Picture" class="profile-picture">
             <h1 id="profile-name"></h1>
             <input type="file" id="profile-picture-upload" accept="image/*" style="display: none;">
         </header>
@@ -50,8 +47,12 @@
                 <input type="password" id="password" name="password">
             </div>
             <div class="form-group">
-                <label for="courses">Courses:</label>
-                <input type="text" id="courses" name="courses">
+                <label for="subjects">Courses to teach:</label>
+                <input type="text" id="subjects" name="subjects">
+            </div>
+            <div class="form-group">
+                <label for="qualification">Qualifications:</label>
+                <input type="text" id="qualification" name="courses">
             </div>
             <button type="submit">Update</button>
         </form>
@@ -69,7 +70,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('token');
             if (!token) {
-                window.location.href = './login.html';
+                window.location.href = '../login.html';
             } else {
                 document.body.style.display = 'block'; // Show body content once loaded
             }
@@ -78,9 +79,9 @@
         
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./Client-servers/profile.js"></script>  
-    <script src="./headerFooter.js"></script>  
-    <script src="./Client-servers/login.js"></script>
-    <script src="./Client-servers/notifications.js"></script>
+    <script src="../TClient-servers/tprofile.js"></script>
+    <script src="./theaderFooter.js"></script>   
+    <script src="../Client-servers/login.js"></script>
+    <script src="../Client-servers/notifications.js"></script>
 </body>
 </html>

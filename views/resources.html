@@ -1,11 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources</title>
+    <title>Resource Sharing Interface</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="../frontC/ResourceController.js"></script>
 </head>
 <body>
     <div class="container">
@@ -82,15 +82,23 @@
                         <br>
                         <button type="submit">Upload Resource</button>
                     </form>
-                </section>
-
+                    <label for="upload" class="upload-btn">Upload File</label>
+                </div>
+                <div class="resource-list">
+                    <h3>Available Resources</h3>
+                    <ul></ul>
+                </div>
             </div>
-        </main>
+        </div>
     </div>
+    
 
-
-
-    <script src="../Client-servers/login.js"></script>
+    <!-- Ensure script tags are at the bottom of the body -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../script.js"></script>
+    <script src="../Client-servers/login.js"></script>
+    <script src="../Client-servers/resource-sharing.js"></script>
+    <script src="../Client-servers/notifications.js"></script>
+    <script src="./theaderFooter.js"></script>
 </body>
 </html>
