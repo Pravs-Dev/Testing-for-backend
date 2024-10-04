@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       # Step 1: Checkout repository
@@ -29,15 +29,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Rebuild bcrypt for the CI environment
+      # Step 4: Grant permission to node-pre-gyp
+      - name: Set execute permission for node-pre-gyp
+        run: chmod +x ./node_modules/.bin/node-pre-gyp
+
+      # Step 5: Rebuild bcrypt for the CI environment
       - name: Rebuild bcrypt
         run: npm rebuild bcrypt --build-from-source
 
-      # Step 5: Run tests with coverage
+      # Step 6: Run tests with coverage
       - name: Run tests with coverage
         run: npm test -- --coverage
 
-      # Step 6: Upload coverage to Codecov
+      # Step 7: Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         if: always()
