@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student review page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+
+    <div class="main-content">
+        <div class="feedback-form">
+            <h3>Rate your tutor</h3>
+
+            <!-- Star rating section -->
+            <div class="stars" id="stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+
+            <!-- Feedback comments section -->
+            <textarea class="comments" id="comments" placeholder="Leave additional feedback" rows="4"></textarea>
+
+            <!-- Submit feedback button -->
+            <button class="submit-feedback" id="submit-feedback">Submit Feedback</button>
+
+            <!-- Success message -->
+            <div id="success-message" class="success-message">
+                You have successfully submitted feedback to your tutor!
+            </div>            
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./headerFooter.js"></script>
+    <script src="./Client-servers/reviews.js"></script>
+    <script src="./Client-servers/login.js"></script>
+</body>
+
+</html>
