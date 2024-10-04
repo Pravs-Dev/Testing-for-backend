@@ -24,52 +24,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (response.ok) {
             const user = await response.json();
             const { fname, lname, email, role, courses } = user;
-
+        
             profileNameElement.textContent = `${fname} ${lname}`;
             document.getElementById('fname').value = fname;
             document.getElementById('lname').value = lname;
             document.getElementById('email').value = email;
             document.getElementById('role').value = role;
             document.getElementById('courses').value = courses || '';
+        
             const currCourseUL = document.getElementById('current-courses-list');
-
-
+            currCourseUL.innerHTML = ''; // Clear existing list items, if any
+        
             console.log('Profile data loaded:', { fname, lname, email, role, courses });
-            // let coursesList = courses[0].split(", ")
-            // console.log(coursesList)
-
+        
             if (courses && courses.length > 0) {
-                let coursesData = courses[0];
+                // Handle if courses is an array or a string
+                let coursesData = Array.isArray(courses) ? courses : [courses];
         
-                // Handle if coursesData is an array, string, or something else
-                if (Array.isArray(coursesData)) {
-                    console.log("Courses data is an array", coursesData);
-                    // Iterate through each course and display
-                    coursesData.forEach(course => {
-                        // Create an 'li' element
-        const listItem = document.createElement('li');
-        listItem.style.listStyleType = 'none'
-        listItem.style.textAlign = 'left';
-
+                coursesData.forEach((courseData) => {
+                    // Check if courseData is a string that needs splitting
+                    let courseList = typeof courseData === 'string' ? courseData.split(", ") : courseData;
         
-        // Set the content of the 'li' element
-        listItem.innerHTML = course;
-        
-        // Append the 'li' to the current courses list (UL)
-        currCourseUL.appendChild(listItem);
+                    // Now iterate over the courseList (either split string or array)
+                    courseList.forEach((course) => {
+                        const listItem = document.createElement('li');
+                        listItem.style.listStyleType = 'none';
+                        listItem.style.textAlign = 'left';
+                        listItem.textContent = course;
+                        currCourseUL.appendChild(listItem);
                     });
-                } else if (typeof coursesData === 'string') {
-                    console.log("Courses data is a string", coursesData);
-                    let coursesList = coursesData.split(", ");
-                    console.log('Courses List:', coursesList);
-                } else {
-                    console.log("Unexpected data type:", typeof coursesData, coursesData);
-                }}
-
+                });
+            } else {
+                console.log('No courses available');
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No courses available';
+                listItem.style.listStyleType = 'none';
+                currCourseUL.appendChild(listItem);
+            }
         } else {
             console.error('Failed to fetch user data');
             window.location.href = './login.html'; // Redirect if fetch fails
-        }
+        }        
     } catch (error) {
         console.error('Error fetching user data:', error);
     }
