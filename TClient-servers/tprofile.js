@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.ok) {
             const user = await response.json();
-            const { fname, lname, email, role, qualifications, subjects } = user;
-
+            const { fname, lname, email, role, subjects, qualifications } = user;
+        
             profileNameElement.textContent = `${fname} ${lname}`;
             document.getElementById('fname').value = fname;
             document.getElementById('lname').value = lname;
@@ -32,37 +32,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('role').value = role;
             document.getElementById('subjects').value = subjects || '';
             document.getElementById('qualification').value = qualifications || '';
-
-            const currSubjectsUL = document.getElementById('current-subjects-list');
-            currSubjectsUL.innerHTML = ''; // Clear existing list items, if any
-
+        
+            const currCourseUL = document.getElementById('current-courses-list');
+            currCourseUL.innerHTML = ''; // Clear existing list items, if any
+        
             console.log('Profile data loaded:', { fname, lname, email, role, subjects, qualifications });
-
+        
             if (subjects && subjects.length > 0) {
-                let subjectsData = Array.isArray(subjects) ? subjects : [subjects];
-
-                subjectsData.forEach((subjectData) => {
-                    let subjectList = typeof subjectData === 'string' ? subjectData.split(", ") : subjectData;
-
-                    subjectList.forEach((subject) => {
+                // Handle if subjects is an array or a string
+                let coursesData = Array.isArray(subjects) ? subjects : [subjects];
+        
+                coursesData.forEach((courseData) => {
+                    // Check if courseData is a string that needs splitting
+                    let courseList = typeof courseData === 'string' ? courseData.split(", ") : courseData;
+        
+                    // Now iterate over the courseList (either split string or array)
+                    courseList.forEach((course) => {
                         const listItem = document.createElement('li');
                         listItem.style.listStyleType = 'none';
                         listItem.style.textAlign = 'left';
-                        listItem.textContent = subject;
-                        currSubjectsUL.appendChild(listItem);
+                        listItem.textContent = course;
+                        currCourseUL.appendChild(listItem);
                     });
                 });
             } else {
-                console.log('No subjects available');
+                console.log('No courses available');
                 const listItem = document.createElement('li');
-                listItem.textContent = 'No subjects available';
+                listItem.textContent = 'No courses available';
                 listItem.style.listStyleType = 'none';
-                currSubjectsUL.appendChild(listItem);
+                currCourseUL.appendChild(listItem);
             }
         } else {
             console.error('Failed to fetch user data');
             window.location.href = './login.html'; // Redirect if fetch fails
-        }
+        }        
     } catch (error) {
         console.error('Error fetching user data:', error);
     }
@@ -126,20 +129,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                     text: 'Profile updated successfully!',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007bff',
-                    timer: 5000, // Auto-close after 5 seconds
-                    timerProgressBar: true, // Progress bar for auto-close
-                });
+                    timer: 5000, // Auto-close after 3 seconds (optional)
+                    timerProgressBar: true, // Progress bar for auto-close (optional)
+                }); 
                 console.log('Profile updated successfully');
             } else {
                 const errorData = await response.json();
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'success',
                     title: 'Profile update failed',
                     text: 'Error updating profile',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007bff',
-                    timer: 5000,
-                    timerProgressBar: true,
+                    timer: 5000, // Auto-close after 3 seconds (optional)
+                    timerProgressBar: true, // Progress bar for auto-close (optional)
                 });
                 console.error('Error updating profile:', errorData);
             }
@@ -150,18 +153,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-// Delete profile logic
 document.addEventListener('DOMContentLoaded', async () => {
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    // Ensure you have userId and token defined before using them
+    const userId = localStorage.getItem('userId'); // Fetch user ID from local storage
+    const token = localStorage.getItem('token'); // Fetch token from local storage
 
+    // Check if userId and token are available
     if (!userId || !token) {
         console.error('User ID or token is missing. User must be logged in to delete their profile.');
-        return;
+        return; // Exit if user ID or token is not available
     }
 
+    // Delete profile button event listener
     const deleteProfileButton = document.getElementById('delete-profile');
-
+    
+    // Ensure the button exists before adding an event listener
     if (deleteProfileButton) {
         deleteProfileButton.addEventListener('click', async () => {
             const confirmDelete = await Swal.fire({
@@ -171,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
+                confirmButtonText: 'Yes, delete it!'
             });
 
             if (confirmDelete.isConfirmed) {
@@ -180,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/json', // Ensure content type is set
                         },
                     });
 
@@ -192,11 +198,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#007bff',
                         });
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('userId');
-                        window.location.href = './login.html';
+                        localStorage.removeItem('token'); // Clear token
+                        localStorage.removeItem('userId'); // Clear user ID
+                        window.location.href = './login.html'; // Redirect to login page
                     } else {
-                        const errorData = await response.json();
+                        const errorData = await response.json(); // Attempt to parse error response
                         Swal.fire({
                             icon: 'error',
                             title: 'Deletion failed',
@@ -221,3 +227,231 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Delete profile button not found.');
     }
 });
+
+//swal for viewing courses
+document.getElementById('show-courses-btn').addEventListener('click', async function () {
+    // Fetch current user courses before showing the Swal modal
+    const currentCourses = await getCurrentCourses();
+
+    Swal.fire({
+        title: 'Select Courses',
+        html: `
+            <div class="custom-modal-container">
+                
+                <div class="select-container">
+                    <label for="faculty">Select Faculty:</label>
+                    <select id="faculty" class="swal2-select custom-swal-select">
+                        <option value="" disabled selected>-- Select Faculty --</option>
+                    </select>
+                </div>
+                <div class="select-container" id="course-container" style="display:none;">
+                    <label for="course">Select Course:</label>
+                    <select id="course" class="swal2-select custom-swal-select">
+                        <option value="" disabled selected>-- Select Course --</option>
+                    </select>
+                </div>
+                <div class="select-container" id="year-container" style="display:none;">
+                    <label for="year">Select Year of Study:</label>
+                    <select id="year" class="swal2-select custom-swal-select">
+                        <option value="" disabled selected>-- Select Year --</option>
+                    </select>
+                </div>
+                <div class="course-list" id="course-list" style="display:none;">
+                    <h2>Modules Available for Selected Year</h2>
+                    <form id="module-form">
+                        <div id="course-list-ul"></div>
+                    </form>
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Update Courses',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel',
+            select: 'custom-swal-select',
+        },
+        preConfirm: () => {
+            const selectedModules = [];
+            document.querySelectorAll('#module-form input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedModules.push(checkbox.value);
+            });
+    
+            if (selectedModules.length > 0) {
+                return selectedModules;
+            } else {
+                Swal.showValidationMessage('Please select at least one module');
+                return false;
+            }
+        }
+    }).then(async (result) => {
+        if (result.isConfirmed && result.value) {
+            // Update the courses input with the selected modules
+            const coursesInput = document.getElementById('subjects');
+            coursesInput.value = result.value.join(', ');
+
+            // Save the updated courses to the user's profile
+            await saveUpdatedCourses(result.value);
+        }
+    });
+
+    // Fetch and load faculties and courses inside the Swal popup, and show current courses
+    fetchFacultiesForSwal(currentCourses);
+});
+
+
+if (Array.isArray(coursesData)) {
+    coursesData.forEach(course => {
+        // Create an 'li' element
+        const listItem = document.createElement('li');
+        
+        // Set the content of the 'li' element
+        listItem.innerHTML = course;
+        
+        // Append the 'li' to the current courses list (UL)
+        currCourseUL.appendChild(listItem);
+    });
+}
+
+
+// Fetch faculties and courses from the API and populate the Swal modal, mark current courses
+async function fetchFacultiesForSwal(currentCourses) {
+
+    let facultiesData = [];
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/courses`);
+        facultiesData = await response.json();
+
+        const facultySelect = document.getElementById('faculty');
+        facultiesData.forEach(faculty => {
+            const option = document.createElement('option');
+            option.value = faculty._id;
+            option.textContent = faculty.faculty_name;
+            facultySelect.appendChild(option);
+        });
+
+        facultySelect.addEventListener('change', function () {
+            const selectedFacultyId = this.value;
+            const selectedFaculty = facultiesData.find(faculty => faculty._id === selectedFacultyId);
+            const courseSelect = document.getElementById('course');
+            courseSelect.innerHTML = '<option value="" disabled selected>-- Select Course --</option>';
+
+            if (selectedFaculty) {
+                selectedFaculty.courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course._id;
+                    option.textContent = course.course_name;
+                    courseSelect.appendChild(option);
+                });
+                document.getElementById('course-container').style.display = 'block';
+            }
+
+            courseSelect.addEventListener('change', function () {
+                const selectedCourseId = this.value;
+                const selectedCourse = selectedFaculty.courses.find(course => course._id === selectedCourseId);
+                const yearSelect = document.getElementById('year');
+                yearSelect.innerHTML = '<option value="" disabled selected>-- Select Year --</option>';
+
+                if (selectedCourse) {
+                    selectedCourse.years_of_study.forEach(year => {
+                        const option = document.createElement('option');
+                        option.value = year.year;
+                        option.textContent = `Year ${year.year}`;
+                        yearSelect.appendChild(option);
+                    });
+                    document.getElementById('year-container').style.display = 'block';
+                }
+
+                yearSelect.addEventListener('change', function () {
+                    const selectedYearValue = this.value;
+                    const selectedYear = selectedCourse.years_of_study.find(year => year.year === parseInt(selectedYearValue));
+                    const courseListUl = document.getElementById('course-list-ul');
+                    courseListUl.innerHTML = '';
+
+                    if (selectedYear) {
+                        // Populate checkboxes for modules and pre-check current courses
+                        selectedYear.modules.forEach(module => {
+                            const isChecked = currentCourses.includes(module.module) ? 'checked' : ''; // Check if the current course matches
+                            const div = document.createElement('div');
+                            div.innerHTML = `
+                                <label>
+                                    <input type="checkbox" value="${module.module}" ${isChecked}> ${module.module}
+                                </label>
+                            `;
+                            courseListUl.appendChild(div);
+                        });
+                        document.getElementById('course-list').style.display = 'block';
+                    }
+                });
+            });
+        });
+    } catch (error) {
+        console.error('Error fetching faculties:', error);
+    }
+}
+
+// Fetch the user's current courses
+async function getCurrentCourses() {
+    //const API_BASE_URL = 'https://finalbackend2099.azurewebsites.net/api';
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+            return user.courses ? user.courses.split(', ') : [];
+        } else {
+            console.error('Failed to fetch current courses');
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching current courses:', error);
+        return [];
+    }
+}
+
+// Save updated courses to the user's profile
+async function saveUpdatedCourses(courses) {
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+
+    formData.append('courses', courses.join(', '));
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Courses updated',
+                text: 'Your courses have been updated successfully!',
+                confirmButtonText: 'OK',
+            });
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Update failed',
+                text: errorData.message || 'Error updating courses.',
+                confirmButtonText: 'OK',
+            });
+        }
+    } catch (error) {
+        console.error('Error updating courses:', error);
+    }
+}
