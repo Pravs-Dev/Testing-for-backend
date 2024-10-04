@@ -970,6 +970,7 @@ body.dark-theme {
     margin: 20px auto; /* Center the form with auto margin */
     flex-wrap: wrap;
     gap: 20px;
+    
 
 }
 
@@ -1006,6 +1007,13 @@ body.dark-theme {
     color: black;
 }
 
+.session-container, #pending-list, #confirmed-list, #completed-list, #cancelled-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* This creates two equal-width columns */
+    grid-gap: 20px; /* Optional: space between grid items */
+}
+
+
 .delete-btn{
     background-color: #f44336;
     color: white;
@@ -1013,6 +1021,10 @@ body.dark-theme {
     border: none;
     cursor: pointer;
     margin-top: 20px;
+}
+
+.card {
+    background-image: url(../Icons/pending\ sessions.webp);
 }
 
 /* Container for day availability to use flexbox */
@@ -1072,7 +1084,7 @@ body.dark-theme {
     margin: 20px 0;
 }
 
-.card {
+.card-pending, .card-completed, .card-confirmed, .card-cancelled {
     height: 60vh; /* Makes the card height 60% of the viewport height */
     width: 200px;
     padding: 20px;
@@ -1081,9 +1093,37 @@ body.dark-theme {
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
-.card:hover {
+.card-pending {
+    background-image: url('../Icons/pending.webp');
+    background-size:cover; /* This ensures the whole image fits within the container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+.card-confirmed {
+    background-image: url('../Icons/confirmed.webp');
+    background-size:cover; /* This ensures the whole image fits within the container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+.card-completed {
+    background-image: url('../Icons/completed.webp');
+    background-size:cover; /* This ensures the whole image fits within the container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+.card-cancelled {
+    background-image: url('../Icons/cancelled.webp');
+    background-size:cover; /* This ensures the whole image fits within the container */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+
+.card-pending:hover, .card-confirmed:hover, .card-completed:hover, .card-cancelled:hover {
     transform: scale(1.05);
 }
 
