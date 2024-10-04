@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">59.61% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/52</span>
+                <span class='fraction'>31/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">35.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/14</span>
+                <span class='fraction'>5/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">59.61% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/52</span>
+                <span class='fraction'>31/52</span>
             </div>
         
             
@@ -278,14 +278,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -294,13 +294,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -405,15 +405,15 @@ export const getUserById = async (id) =&gt; {
 };
 &nbsp;
 &nbsp;
-export const modifyUser = async (id, payload, file) =&gt; {
-  try {
-    const user = await User.findById(id);
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!user) {
+export const modifyUser = <span class="fstat-no" title="function not covered" >as</span>ync (id, payload, file) =&gt; {
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const user = <span class="cstat-no" title="statement not covered" >await User.findById(id);</span>
+<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
 <span class="cstat-no" title="statement not covered" >      throw new Error('User not found');</span>
     }
 &nbsp;
     // If a file is provided, update the profile picture
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (file) {
+<span class="cstat-no" title="statement not covered" >    if (file) {</span>
 <span class="cstat-no" title="statement not covered" >      user.profilePicture = {</span>
         data: file.buffer,
         contentType: file.mimetype,
@@ -422,13 +422,13 @@ export const modifyUser = async (id, payload, file) =&gt; {
     }
 &nbsp;
     // Update other fields from payload
-    Object.keys(payload).forEach((key) =&gt; {
-      user[key] = payload[key];
+<span class="cstat-no" title="statement not covered" >    Object.keys(payload).forEach(<span class="fstat-no" title="function not covered" >(k</span>ey) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      user[key] = payload[key];</span>
     });
 &nbsp;
     // Save the updated user
-    const updatedUser = await user.save();
-    return updatedUser;
+    const updatedUser = <span class="cstat-no" title="statement not covered" >await user.save();</span>
+<span class="cstat-no" title="statement not covered" >    return updatedUser;</span>
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    throw new Error(`Error updating user: ${error.message}`);</span>
   }
@@ -454,7 +454,7 @@ export const deleteUserById = async (id) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-04T21:31:46.476Z
+                at 2024-10-04T21:39:55.579Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

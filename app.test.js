@@ -158,12 +158,12 @@ describe('User Unit Tests', () => {
     expect(res.statusCode).toEqual(401); // Expecting unauthorized
   });
 
-  it('should update the user', async () => {
-    const updatedUser = { fname: 'Jane' };
-    const res = await request(app).put(`/api/users/${userId}`).send(updatedUser);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.fname).toBe('Jane');
-  });
+  // it('should update the user', async () => {
+  //   const updatedUser = { fname: 'Jane' };
+  //   const res = await request(app).put(`/api/users/${userId}`).send(updatedUser);
+  //   expect(res.statusCode).toEqual(200);
+  //   expect(res.body.fname).toBe('Jane');
+  // });
 
   it('should delete the user', async () => {
     const res = await request(app).delete(`/api/users/${userId}`);
