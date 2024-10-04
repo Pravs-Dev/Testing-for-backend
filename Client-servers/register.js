@@ -1,6 +1,19 @@
-//const API_BASE_URL = 'https://finalbackend2099.azurewebsites.net/api';
 const API_BASE_URL = 'http://localhost:3000/api';
 
+
+
+const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', function () {
+      // Toggle the type attribute between 'password' and 'text'
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+
+      // Toggle the alt text for accessibility
+      const img = this.querySelector('img');
+      img.alt = type === 'password' ? 'Show Password' : 'Hide Password';
+    });
 
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
@@ -32,6 +45,32 @@ document.addEventListener('DOMContentLoaded', () => {
             // Validate the form fields
             if (!role || !email || !password || !fname || !lname) {
                 alert('Please fill in all the required fields.');
+                return;
+            }
+
+
+            // Password validation
+            const errorMessages = [];
+            if (password.length < 8) {
+                errorMessages.push('Password must be at least 8 characters long.');
+            }
+            if (!/[a-z]/.test(password)) {
+                errorMessages.push('Password must contain at least one lowercase letter.');
+            }
+            if (!/[A-Z]/.test(password)) {
+                errorMessages.push('Password must contain at least one uppercase letter.');
+            }
+            if (!/[0-9]/.test(password)) {
+                errorMessages.push('Password must contain at least one number.');
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                errorMessages.push('Password must contain at least one special character.');
+            }
+
+            // If there are any error messages, display them and stop the form submission
+            if (errorMessages.length > 0) {
+                document.getElementById("error-msg").innerHTML = errorMessages.join('<br>');
+                document.getElementById("error-msg").style.color = 'red';
                 return;
             }
 

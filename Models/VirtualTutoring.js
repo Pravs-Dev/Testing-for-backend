@@ -5,20 +5,20 @@ const virtualTutoringSchema = new mongoose.Schema({
   tutorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
   scheduledTime: {
     type: Date,
-    required: true
+    required: true,
   },
   videoConferenceUrl: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
