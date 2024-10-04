@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://finalbackend2099-fddad4fndbcmb8ht.canadacentral-01.azurewebsites.net/api';
+const API_BASE_URL = 'https://finalbackend2099.azurewebsites.net/api';
 
 
 document.addEventListener('DOMContentLoaded', () => {

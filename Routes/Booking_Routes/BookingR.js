@@ -5,7 +5,10 @@ import {
   getBookingById,
   modifyBooking,
   cancelBooking,
-  deleteBookingById, 
+  deleteBookingById,
+  getBookingByTutor, 
+  getCompletedAndReviewedSessionsByStudent,
+  markSessionAsReviewed,
 } from '../../Controllers/Booking_Controller/BookingC.js';
 
 const router = express.Router();
@@ -93,5 +96,48 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting booking', error: error.message });
   }
 });
+
+router.get('/tutor/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const booking = await getBookingByTutor(id);
+    if (booking) {
+      res.status(200).json(booking); 
+    } else {
+      res.status(404).json({ message: 'Bookings not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching booking', error: error.message });
+  }
+});
+
+router.get('/student/:id/completed', async (req, res) => {
+  const { id } = req.params;
+  try {
+      // Fetch completed and reviewed sessions using the updated controller function
+      const completedSessions = await getCompletedAndReviewedSessionsByStudent(id);
+      res.status(200).json(completedSessions); 
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching completed sessions', error: error.message });
+  }
+});
+
+// Update booking to mark it as reviewed
+router.put('/:id/reviewed', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const reviewedSession = await markSessionAsReviewed(id);
+    if (reviewedSession) {
+      res.status(200).json(reviewedSession); // Send back the updated session
+    } else {
+      res.status(404).json({ message: 'Session not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking session as reviewed', error: error.message });
+  }
+});
+
+
+
 
 export default router;
