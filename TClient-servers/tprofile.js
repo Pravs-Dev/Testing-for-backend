@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!token || !userId) {
         console.error('No token or user ID found, redirect to login');
-        window.location.href = '../login.html'; // Redirect if not logged in
+        window.location.href = './login.html'; // Redirect if not logged in
         return;
     }
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.ok) {
             const user = await response.json();
-            const { fname, lname, email, role, qualifications ,subjects } = user;
+            const { fname, lname, email, role, qualifications, subjects } = user;
 
             profileNameElement.textContent = `${fname} ${lname}`;
             document.getElementById('fname').value = fname;
@@ -33,10 +33,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('subjects').value = subjects || '';
             document.getElementById('qualification').value = qualifications || '';
 
+            const currSubjectsUL = document.getElementById('current-subjects-list');
+            currSubjectsUL.innerHTML = ''; // Clear existing list items, if any
+
             console.log('Profile data loaded:', { fname, lname, email, role, subjects, qualifications });
+
+            if (subjects && subjects.length > 0) {
+                let subjectsData = Array.isArray(subjects) ? subjects : [subjects];
+
+                subjectsData.forEach((subjectData) => {
+                    let subjectList = typeof subjectData === 'string' ? subjectData.split(", ") : subjectData;
+
+                    subjectList.forEach((subject) => {
+                        const listItem = document.createElement('li');
+                        listItem.style.listStyleType = 'none';
+                        listItem.style.textAlign = 'left';
+                        listItem.textContent = subject;
+                        currSubjectsUL.appendChild(listItem);
+                    });
+                });
+            } else {
+                console.log('No subjects available');
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No subjects available';
+                listItem.style.listStyleType = 'none';
+                currSubjectsUL.appendChild(listItem);
+            }
         } else {
             console.error('Failed to fetch user data');
-            window.location.href = '../login.html'; // Redirect if fetch fails
+            window.location.href = './login.html'; // Redirect if fetch fails
         }
     } catch (error) {
         console.error('Error fetching user data:', error);
@@ -101,20 +126,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                     text: 'Profile updated successfully!',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007bff',
-                    timer: 5000, // Auto-close after 3 seconds (optional)
-                    timerProgressBar: true, // Progress bar for auto-close (optional)
-                }); 
+                    timer: 5000, // Auto-close after 5 seconds
+                    timerProgressBar: true, // Progress bar for auto-close
+                });
                 console.log('Profile updated successfully');
             } else {
                 const errorData = await response.json();
                 Swal.fire({
-                    icon: 'success',
+                    icon: 'error',
                     title: 'Profile update failed',
                     text: 'Error updating profile',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007bff',
-                    timer: 5000, // Auto-close after 3 seconds (optional)
-                    timerProgressBar: true, // Progress bar for auto-close (optional)
+                    timer: 5000,
+                    timerProgressBar: true,
                 });
                 console.error('Error updating profile:', errorData);
             }
@@ -125,21 +150,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+// Delete profile logic
 document.addEventListener('DOMContentLoaded', async () => {
-    // Ensure you have userId and token defined before using them
-    const userId = localStorage.getItem('userId'); // Fetch user ID from local storage
-    const token = localStorage.getItem('token'); // Fetch token from local storage
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
-    // Check if userId and token are available
     if (!userId || !token) {
         console.error('User ID or token is missing. User must be logged in to delete their profile.');
-        return; // Exit if user ID or token is not available
+        return;
     }
 
-    // Delete profile button event listener
     const deleteProfileButton = document.getElementById('delete-profile');
-    
-    // Ensure the button exists before adding an event listener
+
     if (deleteProfileButton) {
         deleteProfileButton.addEventListener('click', async () => {
             const confirmDelete = await Swal.fire({
@@ -149,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
             });
 
             if (confirmDelete.isConfirmed) {
@@ -158,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json', // Ensure content type is set
+                            'Content-Type': 'application/json',
                         },
                     });
 
@@ -170,11 +192,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#007bff',
                         });
-                        localStorage.removeItem('token'); // Clear token
-                        localStorage.removeItem('userId'); // Clear user ID
-                        window.location.href = './login.html'; // Redirect to login page
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userId');
+                        window.location.href = './login.html';
                     } else {
-                        const errorData = await response.json(); // Attempt to parse error response
+                        const errorData = await response.json();
                         Swal.fire({
                             icon: 'error',
                             title: 'Deletion failed',

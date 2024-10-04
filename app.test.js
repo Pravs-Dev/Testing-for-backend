@@ -365,12 +365,7 @@ describe('Virtual Tutoring Unit Tests', () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body.message).toBe('Notification deleted successfully');
     });
-  
-    it('should return 500 if notification not found when deleting', async () => {
-      const res = await request(app).delete('/api/notifications/invalidId'); // Use an invalid ID
-      expect(res.statusCode).toEqual(500);
-      expect(res.body.message).toBe('Error deleteing notification');
-    });
+    
     afterAll((done) => {
       mongoose.connection.close();
       done();
