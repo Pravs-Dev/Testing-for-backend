@@ -29,9 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Ensure Jest permissions
-      - name: Ensure Jest permissions
-        run: chmod +x ./node_modules/.bin/jest
+      # Step 4: Rebuild bcrypt for the CI environment
+      - name: Rebuild bcrypt
+        run: npm rebuild bcrypt --build-from-source
 
       # Step 5: Run tests with coverage
       - name: Run tests with coverage
