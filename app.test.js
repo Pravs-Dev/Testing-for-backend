@@ -52,11 +52,15 @@ app.get('/test', (req, res) => {
 });
 
 let userId; // Global variable to store the user ID
+let TutorId;
 
 describe('User Unit Tests', () => {
 
   const randomEmail = () => `test${Math.floor(Math.random() * 100000)}@example.com`;
   const randomName = () => `User${Math.floor(Math.random() * 1000)}`;
+
+  const TrandomEmail = () => `test${Math.floor(Math.random() * 100000)}@example.com`;
+  const TrandomName = () => `User${Math.floor(Math.random() * 1000)}`;
 
   it('should return "test"', async () => {
     const res = await request(app).get('/test');
@@ -84,6 +88,22 @@ describe('User Unit Tests', () => {
 
     // Store the user ID globally
     userId = res.body.user._id;
+  });
+
+  it('should create a new Tutor', async () => {
+    const newUser = {
+      email: TrandomEmail(), // Generate a random email
+      password: 'password562',
+      fname: TrandomName(), // Generate a random first name
+      lname: 'Doeer',
+      role: 'tutor'
+    };
+    const res = await request(app).post('/api/users').send(newUser);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.user).toHaveProperty('_id');
+
+    // Store the user ID globally
+    TutorId = res.body.user._id;
   });
 
   it('should return a specific user by ID', async () => {
@@ -117,6 +137,13 @@ describe('User Unit Tests', () => {
 
   it('should delete the user', async () => {
     const res = await request(app).delete(`/api/users/${userId}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('User deleted successfully');
+  });
+
+
+  it('should delete the tutor', async () => {
+    const res = await request(app).delete(`/api/users/${TutorId}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toBe('User deleted successfully');
   });
@@ -193,10 +220,6 @@ describe('Virtual Tutoring Unit Tests', () => {
     expect(res.body.message).toBe('Session deleted successfully');
   });
 
-  afterAll((done) => {
-    mongoose.connection.close();
-    done();
-  });
 
 
   describe('Bookings Unit Test', () => {

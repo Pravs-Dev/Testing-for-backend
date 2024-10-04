@@ -65,7 +65,7 @@ userSchema.pre('save', async function (next) {
     if (this.role === 'student') {
         this.subjects = undefined;
         this.qualifications = undefined;
-    } else if (this.role === 'tutor') {
+    } else {
         this.courses = undefined;
     }
 }
