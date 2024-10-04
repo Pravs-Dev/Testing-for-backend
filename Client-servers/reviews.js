@@ -1,6 +1,7 @@
 const stars = document.querySelectorAll('.star');
 let selectedRating = 0;
 
+// Highlight stars when clicked
 stars.forEach(star => {
     star.addEventListener('click', () => {
         selectedRating = star.getAttribute('data-value');
@@ -8,6 +9,7 @@ stars.forEach(star => {
     });
 });
 
+// Add filled class to stars up to the selected rating
 function highlightStars(rating) {
     stars.forEach(star => {
         if (star.getAttribute('data-value') <= rating) {
@@ -18,9 +20,23 @@ function highlightStars(rating) {
     });
 }
 
+// Extract session ID and tutor ID (ensure these values are correct)
+const urlParams = new URLSearchParams(window.location.search);
+const sessionId = urlParams.get('sessionId'); // Assuming the session ID is passed in the URL
+const tutorId = localStorage.getItem('tutorId'); // Get the tutor's ID from local storage
+const subject = localStorage.getItem('subject'); // Get the subject from local storage
+
+// Ensure all required information is available before proceeding
+if (!sessionId || !tutorId || !subject) {
+    console.error('Missing session or tutor information.');
+    alert('Session information is incomplete. Please try again.');
+}
+
+// Handle feedback submission
 document.getElementById('submit-feedback').addEventListener('click', () => {
     const comments = document.getElementById('comments').value;
-    
+
+    // Ensure the rating is selected before submitting
     if (selectedRating === 0) {
         alert('Please select a star rating before submitting.');
         return;
@@ -28,25 +44,64 @@ document.getElementById('submit-feedback').addEventListener('click', () => {
 
     const feedbackData = {
         rating: selectedRating,
-        comments: comments
+        comment: comments,
+        subject: subject,
+        uploader: localStorage.getItem('userId'),
+        tutor: tutorId,
+        session: sessionId
     };
 
-    // Here you can handle the form submission (e.g., send the feedback to your server)
-    console.log('Submitted feedback:', feedbackData);
-    
-    // Show success notification
-    const successMessage = document.getElementById('success-message');
-    successMessage.classList.add('show');
+    // Handle form submission to the backend
+    fetch(`${API_BASE_URL}/feedback/submit`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(feedbackData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Submitted feedback:', data);
+        
+        // Mark session as reviewed in the backend
+        return fetch(`${API_BASE_URL}/bookings/${sessionId}/reviewed`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to mark session as reviewed');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Session marked as reviewed:', data);
 
-    // Hide the notification after 3 seconds
-    setTimeout(() => {
-        successMessage.classList.remove('show');
-    }, 2000);
+        // Show SweetAlert notification
+        Swal.fire({
+            icon: 'success',
+            title: 'Feedback submitted',
+            text: 'Your feedback has been submitted successfully!',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007bff',
+            timer: 5000,
+            timerProgressBar: true,
+        }).then((result) => {
+            if (result.isConfirmed || result.isDismissed) {
+                window.location.href = './dashboard.html';
+            }
+        });
 
-    // Clear the form after submission
-    document.getElementById('comments').value = '';
-
-    // Clear the form after submission
-    document.getElementById('comments').value = '';
-    highlightStars(0); // Reset stars
+        // Remove subject and tutorId from localStorage after successful review
+        localStorage.removeItem('subject');
+        localStorage.removeItem('tutorId');
+        document.getElementById('comments').value = '';
+        highlightStars(0);
+    })
+    .catch(error => {
+        console.error('Error submitting feedback:', error);
+    });
 });

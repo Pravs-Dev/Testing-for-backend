@@ -45,6 +45,185 @@ const renderAvailableTutors = (tutors) => {
 };
 
 // Load tutors and set the selected tutor from localStorage
+function displayAvailability(availabilityData) {
+    const availabilityContainer = document.createElement('div');
+    availabilityContainer.id = 'tutor-availability';
+
+    const header = document.createElement('h2');
+    header.innerText = 'Availability';
+    availabilityContainer.appendChild(header);
+
+    const availabilityTable = document.createElement('table');
+    availabilityTable.classList.add('availability-table');
+
+    const tableHeader = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const dayHeader = document.createElement('th');
+    dayHeader.innerText = 'Day';
+    const slotsHeader = document.createElement('th');
+    slotsHeader.innerText = 'Time Slots';
+
+    headerRow.appendChild(dayHeader);
+    headerRow.appendChild(slotsHeader);
+    tableHeader.appendChild(headerRow);
+    availabilityTable.appendChild(tableHeader);
+
+    const tableBody = document.createElement('tbody');
+
+    // Get stored selected time from localStorage
+    const storedSelectedTime = localStorage.getItem('selectedTime');
+
+    if (availabilityData && availabilityData.availability) {
+        availabilityData.availability.forEach(day => {
+            const dayRow = document.createElement('tr');
+            const dayCell = document.createElement('td');
+            dayCell.innerText = day.date;
+
+            const slotsCell = document.createElement('td');
+            if (Array.isArray(day.slots) && day.slots.length > 0) {
+                day.slots.forEach(slot => {
+                    if (slot.start && slot.end) {
+                        const timeSlot = document.createElement('div');
+                        const slotTime = `${slot.start} - ${slot.end}`;
+                        timeSlot.innerText = slotTime;
+                        timeSlot.classList.add('time-slot'); // Add class for styling
+
+                        // Add click event to store selected date and time
+                        timeSlot.addEventListener('click', () => {
+                            // Store the selected date and time in localStorage
+                            localStorage.setItem('selectedDate', day.date);
+                            localStorage.setItem('selectedTime', slotTime);
+                            // Remove highlight from other slots
+                            document.querySelectorAll('.time-slot').forEach(el => el.style.backgroundColor = '');
+                            // Highlight the selected time
+                            timeSlot.style.backgroundColor = '#007bff'; // Highlight selected time
+                        });
+
+                        // Check if this slot matches the stored selected time and highlight it
+                        if (storedSelectedTime === slotTime) {
+                            timeSlot.style.backgroundColor = '#007bff'; // Highlight stored selected time
+                        }
+
+                        slotsCell.appendChild(timeSlot);
+                    }
+                });
+                if (slotsCell.innerHTML === '') {
+                    slotsCell.innerText = 'No slots available.';
+                }
+            } else {
+                slotsCell.innerText = 'Slots data is not available.';
+            }
+
+            dayRow.appendChild(dayCell);
+            dayRow.appendChild(slotsCell);
+            tableBody.appendChild(dayRow);
+        });
+    } else {
+        availabilityContainer.innerText = 'No availability data found.';
+    }
+
+    availabilityTable.appendChild(tableBody);
+    availabilityContainer.appendChild(availabilityTable);
+
+    const profileBody = document.querySelector('.profile-body');
+    if (profileBody) {
+        profileBody.appendChild(availabilityContainer);
+    } else {
+        console.error('Profile body not found. Ensure that the selector is correct.');
+    }
+}
+
+
+
+// Render calendar inside a SweetAlert
+function showCalendar() {
+    const calendarContainer = document.createElement('div');
+    calendarContainer.classList.add('calendar-container');
+
+    // Get the stored day name from local storage
+    const storedDayName = localStorage.getItem('selectedDay'); 
+
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+
+    // Create a header row for the days of the week
+    const headerRow = document.createElement('div');
+    headerRow.classList.add('calendar-header');
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    dayNames.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.classList.add('calendar-header-day');
+        dayHeader.innerText = day; // Set the day name
+        headerRow.appendChild(dayHeader);
+    });
+    calendarContainer.appendChild(headerRow);
+
+    // Create a container for the dates
+    const datesContainer = document.createElement('div');
+    datesContainer.classList.add('dates-container');
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Add empty cells for the days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('calendar-day', 'disabled');
+        datesContainer.appendChild(emptyCell);
+    }
+
+    // Create day cells for the current month
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('calendar-day');
+        dayCell.innerText = day;
+
+        // Create a new Date object for the clicked date
+        const date = new Date(currentYear, currentMonth, day);
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+        // Check if the day matches the stored day name and highlight it
+        if (dayName === storedDayName) {
+            dayCell.classList.add('highlighted');
+            dayCell.addEventListener('click', () => {
+                // Instead of creating a date object, use the selected day directly
+                const selectedDateString = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                
+                // Store the selected date correctly
+                localStorage.setItem('selectedDate', selectedDateString);
+                document.getElementById('sessionDate').value = selectedDateString; // Update input with selected date
+                Swal.close(); // Close the SweetAlert popup
+            });
+        }
+
+        // Check if the selected date exists in local storage
+        const storedDateString = localStorage.getItem('selectedDate');
+        if (storedDateString) {
+            const storedDate = new Date(storedDateString);
+            if (date.toDateString() === storedDate.toDateString()) {
+                dayCell.classList.add('selected'); // Highlight the selected date
+            }
+        }
+
+        datesContainer.appendChild(dayCell); // Append to dates container
+    }
+
+    calendarContainer.appendChild(datesContainer); // Add the dates container to the main calendar container
+
+    // Use SweetAlert to show the calendar
+    Swal.fire({
+        title: 'Select a Date',
+        html: calendarContainer,
+        showCloseButton: true,
+        confirmButtonText: 'Close',
+    });
+}
+
+// Add event listener to calendar icon
+document.getElementById('calendarIcon').addEventListener('click', showCalendar);
+
+
+
 // Load tutors and set the selected tutor and the first subject from localStorage
 const loadTutors = async () => {
     const availableTutors = await fetchTutors(`${API_BASE_URL}/users`);
@@ -85,6 +264,7 @@ const loadTutors = async () => {
         });
     }
 };
+
 
 
 
@@ -133,6 +313,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load tutors on page load
     await loadTutors();
 
+    // Retrieve selected date and time from localStorage
+    const selectedDate = localStorage.getItem('selectedDate');
+    const selectedTimeString = localStorage.getItem('selectedTime'); // Check stored time
+
+    // Fill the date input field
+    if (selectedDate) {
+        document.getElementById('sessionDate').value = new Date(selectedDate).toISOString().split('T')[0]; // Set stored date in input
+    }
+
+    // Populate session times dynamically based on selected date
+    const sessionTimeInput = document.getElementById('sessionTime');
+    sessionTimeInput.innerHTML = ''; // Clear previous options
+
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = 'Select a Time';
+    defaultOption.value = '';
+    sessionTimeInput.appendChild(defaultOption);
+
+    // If selectedTime is in the format "08:44 - 07:47", split and use only one time
+    if (selectedTimeString) {
+        const times = selectedTimeString.split(' - '); // Split the string to get individual times
+        const startTime = times[0]; // Use the first time (start time)
+
+        const timeOption = document.createElement('option');
+        timeOption.textContent = startTime;  // Use the first time from localStorage
+        timeOption.value = startTime;
+        sessionTimeInput.appendChild(timeOption);
+        sessionTimeInput.value = startTime;  // Set the selected time
+    }
+
     const bookingForm = document.getElementById('bookingForm');
 
     bookingForm.addEventListener('submit', async function (event) {
@@ -154,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             tutor: tutor,
             subject: subject,
             sessionDate: sessionDate,
-            sessionTime: sessionTime,
+            sessionTime: sessionTime, // Ensure this is captured properly
             duration: parseInt(duration) * 60, // Convert duration to seconds
             status: status,
             meetingType: meetingType
@@ -178,10 +388,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     text: 'Your booking was created successfully!',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007bff',
-                    timer: 5000, // Auto-close after 3 seconds (optional)
-                    timerProgressBar: true, // Progress bar for auto-close (optional)
+                    timer: 5000,
+                    timerProgressBar: true,
                 }).then((result) => {
-                    // After the user clicks 'OK', show the next prompt
                     if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
                         askToCheckBusSchedule();
                     }
@@ -191,6 +400,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.removeItem('bookingTutor');
                 localStorage.removeItem('selectedSubject');
                 localStorage.removeItem('selectedTutor');
+                localStorage.removeItem('selectedDate'); 
+                localStorage.removeItem('selectedTime'); 
             } else {
                 const errorData = await response.json();
                 alert('Error creating booking: ' + errorData.message);

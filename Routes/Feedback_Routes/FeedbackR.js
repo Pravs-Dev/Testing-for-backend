@@ -8,57 +8,85 @@ import {
     getAllFeedback  
 } from '../../Controllers/Feedback_Controller/FeedbackC.js';
 
-//initialize express
+// Initialize express
 const router = express.Router();
 
-//Post feedback
+// Post feedback
 router.post('/submit', async (request, context) => {
-    const feedback = request.body;
-    const savedFeedback = await createFeedback(feedback);
-    context.json({ message: 'Feedback submitted successfully', feedback: savedFeedback });
+    try {
+        const feedback = request.body;
+        const savedFeedback = await createFeedback(feedback);
+        context.json({ message: 'Feedback submitted successfully', feedback: savedFeedback });
+    } catch (error) {
+        context.status(500).json({ message: 'Error submitting feedback', error: error.message });
+    }
 });
 
-//Get a specific tutor's rating
-router.get('/rating/:id', (request, context) => {
+// Get a specific tutor's rating
+router.get('/rating/:id', async (request, context) => {
     const id = request.params.id;
-    //Get rating form database (example response)
-    const rating = { "rating": 4 };
-    context.json(rating);
+    try {
+        // Get rating from database
+        const rating = { "rating": 4 }; // Replace this with actual logic to fetch rating
+        context.json(rating);
+    } catch (error) {
+        context.status(500).json({ message: 'Error fetching rating', error: error.message });
+    }
 });
 
-//Get all feedbacks (NEW ROUTE)
+// Get all feedbacks (NEW ROUTE)
 router.get('/', async (request, context) => {
-    const feedbacks = await getAllFeedback();  // Fetch all feedbacks
-    context.json(feedbacks);
+    try {
+        const feedbacks = await getAllFeedback();  // Fetch all feedbacks
+        context.json(feedbacks);
+    } catch (error) {
+        context.status(500).json({ message: 'Error fetching feedbacks', error: error.message });
+    }
 });
 
-//Get feedback by tutor id
+// Get feedback by tutor id
 router.get('/:tutorId', async (request, context) => {
     const tutorId = request.params.tutorId;
-    const feedback  = await getTutorFeedback(tutorId);
-    context.json(feedback);
+    try {
+        const feedback  = await getTutorFeedback(tutorId);
+        context.json(feedback);
+    } catch (error) {
+        context.status(500).json({ message: 'Error fetching feedback', error: error.message });
+    }
 });
 
-//Get feedback of a session
+// Get feedback of a session
 router.get('/session/:session', async (request, context) => {
     const session = request.params.session;
-    const feedback = await getFeedbackBySession(session);
-    context.json(feedback);
+    try {
+        const feedback = await getFeedbackBySession(session);
+        context.json(feedback);
+    } catch (error) {
+        context.status(500).json({ message: 'Error fetching feedback', error: error.message });
+    }
 });
 
-//Update specific feedback
+// Update specific feedback
 router.put('/:id', async (request, context) => {
-    const id = request.params.sessionId;
+    const id = request.params.id; // Corrected from sessionId to id
     const feedback = request.body;
-    const updatedFeedback = await updateFeedback(id, feedback);
-    context.json({ message: 'Feedback updated successfully', feedback: updatedFeedback });
+    try {
+        const updatedFeedback = await updateFeedback(id, feedback);
+        context.json({ message: 'Feedback updated successfully', feedback: updatedFeedback });
+    } catch (error) {
+        context.status(500).json({ message: 'Error updating feedback', error: error.message });
+    }
 });
 
-//Delete specific feedback
+// Delete specific feedback
 router.delete('/:feedbackId', async (request, context) => {
     const feedbackId = request.params.feedbackId;
-    const result = await deleteFeedback(feedbackId);
-    context.json({ message: 'Feedback deleted successfully' });
+    try {
+        await deleteFeedback(feedbackId);
+        context.json({ message: 'Feedback deleted successfully' });
+    } catch (error) {
+        context.status(500).json({ message: 'Error deleting feedback', error: error.message });
+    }
 });
 
 export default router;

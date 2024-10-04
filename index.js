@@ -17,10 +17,10 @@ import { authenticateToken} from './tokenmiddleware.js';
 
 const app = express();
 
-const test = 'mongodb+srv://2456518:dEXFE6Pt36oJVqxb@cluster0.d8pfd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+
 const mongoURI = 'mongodb+srv://pravirstudy:l9bCqH0MJzLQOtFl@backenddb.li8va.mongodb.net/?retryWrites=true&w=majority&appName=BackEndDB';
 
-mongoose.connect(test, {
+mongoose.connect(mongoURI, {
 
   serverSelectionTimeoutMS: 50000 
 })

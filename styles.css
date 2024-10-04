@@ -1054,17 +1054,35 @@ input:checked + .slider:before {
     font-size: 24px;
 }
 
-.tutor-availability {
-    font-size: 18px;
+#tutor-availability {
+    margin: 20px;
 }
 
-.availability-time {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #f9f9f9;
+.availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
+
+.availability-table th, .availability-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.availability-table th {
+    background-color: #62b1f6;
+    font-weight: bold;
+}
+ 
+.availability-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.availability-table tr:hover {
+    background-color: #f1f1f1;
+}
+
 
 /* Hide the modal by default */
 .hidden {
@@ -1473,6 +1491,7 @@ textarea {
     display: flex;
     gap: 5px;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .star {
@@ -1482,4 +1501,160 @@ textarea {
 
 .star.filled {
     color: gold;
+}
+
+/* Completed sessions list */
+#completed-list {
+    display: flex; /* Enable flexbox layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 20px; /* Space between items */
+    margin-top: 20px;
+}
+
+/* Each session box */
+.session-completed {
+    background: #e9ecef; /* Light gray for contrast */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex: 1 1 250px; /* Grow, shrink, and set base width for each item */
+    min-width: 250px; /* Minimum width for responsive design */
+}
+
+/* Session title */
+.session-completed h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+/* Session details */
+.session-completed p {
+    margin: 5px 0;
+    font-size: 1em;
+}
+
+
+/* Completed sessions list */
+#reviewed-list {
+    display: flex; /* Enable flexbox layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 20px; /* Space between items */
+    margin-top: 20px;
+}
+
+/* Each session box */
+.session-reviewed {
+    background: #e9ecef; /* Light gray for contrast */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex: 1 1 250px; /* Grow, shrink, and set base width for each item */
+    min-width: 250px; /* Minimum width for responsive design */
+}
+
+/* Session title */
+.session-reviewed h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+/* Session details */
+.session-reviewed p {
+    margin: 5px 0;
+    font-size: 1em;
+}
+
+
+/* Review button */
+.review-btn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Review button hover effect */
+.review-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* No sessions found message */
+#completed-list p {
+    font-size: 1.1em;
+    color: #555; /* Dark gray for readability */
+}
+
+.slot {
+    cursor: pointer; /* Makes the slot look clickable */
+}
+
+.slot.selected {
+    background-color: #498dd5; /* Change this color as needed */
+    color: white;
+}
+
+ /* Calender */
+ .calendar-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Only one column for the overall structure */
+    gap: 10px; /* Adjust gap for clarity */
+    margin: 20px 0;
+    max-width: 100%; /* Ensure the calendar container stays within the parent container */
+}
+
+.calendar-header {
+    display: grid; /* Grid layout for the header */
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for each day */
+    margin-bottom: 10px; /* Add space between the header and the calendar days */
+}
+
+.calendar-header-day {
+    text-align: center; /* Center align the day names */
+    font-weight: bold; /* Make the day names bold */
+    padding: 5px; /* Add some padding for a cleaner look */
+    font-size: 14px; /* Adjust font size for clarity */
+}
+
+.dates-container {
+    display: grid; /* Use grid layout for the date cells */
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for each day */
+    gap: 5px; /* Reduce gap between calendar cells */
+}
+
+.calendar-day {
+    width: 50px; /* Increase width for more balanced appearance */
+    height: 50px; /* Make height equal to width for square cells */
+    display: flex; /* Use flexbox for better centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin: 5px; /* Space between each day cell */
+    border: 1px solid #ccc; /* Border for each cell */
+    cursor: pointer; /* Make the days clickable */
+    font-size: 14px; /* Adjust font size for better readability */
+    border-radius: 5px; /* Add slight rounding to the cells */
+}
+
+.highlighted {
+    background-color: #007bff; /* Highlight selected day */
+    color: #888; /* Make text white */
+}
+
+.selected {
+    border: 2px solid #4db2ff; /* Highlight border for selected day */
+    background-color: #e6f7ff; /* Light blue background for selected day */
+}
+
+.disabled {
+    background-color: #f0f0f0; /* Lighter background for disabled days */
+    color: #888; /* Gray out the text */
+    pointer-events: none; /* Disable clicking for empty cells */
+}
+
+/* Additional optional adjustments */
+.calendar-day:hover {
+    background-color: #f0f8ff; /* Slight hover effect for better user experience */
+    border-color: #007bff; /* Change border color on hover */
 }

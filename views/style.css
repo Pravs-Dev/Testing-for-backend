@@ -904,6 +904,8 @@ body.dark-theme {
     background-color: #4ab3f4; /* Change background on hover */
 }
 
+
+
 .completed-list {
     width: 100%;
     max-width: 600px;
@@ -931,7 +933,26 @@ body.dark-theme {
 }
 
 .confirm-btn{
-    background-color: #4ab3f4;
+    background-color: #006aad;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.complete-btn{
+    background-color: #353368;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
+.modify-btn{
+    background-color: #546067;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -947,6 +968,8 @@ body.dark-theme {
     border-radius: 20px; /* Keep rounded corners */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
     margin: 20px auto; /* Center the form with auto margin */
+    flex-wrap: wrap;
+    gap: 20px;
 
 }
 

@@ -42,49 +42,77 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     
                 `;
-                if(pendingSessions && completedSessions && cancelledSessions){
-                    if(session.status == "Scheduled"){
+                    if(session.status == "Scheduled" && pendingSessions){
                         sessionsElement.innerHTML += `<button class="confirm-btn" onclick="confirmBooking(this)">Confirm</button>`;
-                        sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
+                        sessionsElement.innerHTML += `<button class="modify-btn" onclick="modifyBooking(this)">Modify</button>`;
                         pendingSessions.appendChild(sessionsElement);
                     }
-                    else if(session.status == "Confirmed"){
+                    else if(session.status == "Confirmed" && upcomingSessions){
                         sessionsElement.innerHTML += `<input id="reason${session._id}" >`;
                         sessionsElement.innerHTML += `<button class="confirm-btn" onclick="cancelBooking(this)">Cancel</button>`;
-                        sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
+                        sessionsElement.innerHTML += `<button class="modify-btn" onclick="modifyBooking(this)">Modify</button>`;
+                        sessionsElement.innerHTML += `<button class="complete-btn" onclick="completeBooking(this)">Complete</button>`;
                         upcomingSessions.appendChild(sessionsElement);
                     }
-                    else if(session.status == "Completed"){
+                    else if(session.status == "Completed" && completedSessions){
                         sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
                         completedSessions.appendChild(sessionsElement);
                     }
-                    else if(session.status == "Cancelled"){
+                    else if(session.status == "Cancelled" && cancelledSessions){
                         sessionsElement.innerHTML += `<p>Cancellation Reason: ${session.cancellationReason}</p>`;
                         sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
                         cancelledSessions.appendChild(sessionsElement);
                     }
-                }
-                //Display on the Tutor Dashboard
-                else if(pendingSessions && upcomingSessions){
-                    if(session.status == "Scheduled"){
-                        sessionsElement.innerHTML += `<button class="confirm-btn" onclick="confirmBooking(this)">Confirm</button>`;
-                        sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
-                        pendingSessions.innerHTML += `<h2>Pending Sessions</h2>`;
-                        pendingSessions.appendChild(sessionsElement);
-                    }
-                    else if(session.status == "Confirmed"){
-                        sessionsElement.innerHTML += `<input id="reason${session._id}" >`;
-                        sessionsElement.innerHTML += `<button class="confirm-btn" onclick="cancelBooking(this)">Cancel</button>`;
-                        sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
-                        upcomingSessions.innerHTML += `<h2>Confirmed Sessions</h2>`;
-                        upcomingSessions.appendChild(sessionsElement);
-                    }
-                }
             });
         }
 
         getAllSessionsByTutor(tutor);
 });
+
+function completeBooking(button) {
+    let id = button.parentElement.querySelector('h3').textContent.split(':')[1];
+    
+    fetch(`${API_BASE_URL}/bookings/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'Completed' })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Optionally, reload the page to update the session list
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
+function modifyBooking(button) {
+    let id = button.parentElement.querySelector('h3').textContent.split(':')[1];
+    let newDate = button.parentElement.querySelector('#sessionDate').value;
+    let newTime = button.parentElement.querySelector('#sessionTime').value;
+    
+    fetch(`${API_BASE_URL}/bookings/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sessionDate: newDate, sessionTime: newTime })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Optional: Show a success message or reload the page to see the changes
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
 function confirmBooking(button) {
     let id = button.parentElement.querySelector('h3').textContent.split(':')[1];
