@@ -13,9 +13,15 @@ const virtualTutoringSchema = new mongoose.Schema({
     required: true,
   },
   scheduledTime: {
+    type: String,
+    required: true,
+  },
+
+  scheduledDate: {
     type: Date,
     required: true,
   },
+
   videoConferenceUrl: {
     type: String,
     required: true,

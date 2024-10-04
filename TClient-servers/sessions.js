@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <lable for="sessionTime">Time: </lable>
                         <input id="sessionTime" type="time" value="${session.sessionTime}"></input>
                         <p>Student: ${session.student.fname + ' ' + session.student.lname}</p>
-                        
+                        <p>Session Type: ${session.meetingType}</p>
                     </div>
                     
                     
@@ -62,6 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         sessionsElement.innerHTML += `<p>Cancellation Reason: ${session.cancellationReason}</p>`;
                         sessionsElement.innerHTML += `<button class="delete-btn" onclick="deleteBooking(this)">Delete</button>`;
                         cancelledSessions.appendChild(sessionsElement);
+                    }
+
+                    else if (sessions.meetingType== "Online" && session.status == "Confirmed"){
+                        sessionsElement.innerHTML += `<button class="confirmed" onclick="vertuallink()">SendVirtuallink</button>`;
+                        sessionsElement.innerHTML += `<button class="modify-btn" onclick="modifyBooking(this)">Modify</button>`;
                     }
             });
         }
