@@ -1,5 +1,5 @@
 // Redirect to Google OAuth route when Google login button is clicked
-const API_BASE_URL = 'https://finalbackend2099.azurewebsites.net/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 
 function handleGoogleLogin() {
@@ -131,3 +131,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching user data:', error);
     }
 });
+
+const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', function () {
+      // Toggle the type attribute between 'password' and 'text'
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+
+      // Toggle the alt text for accessibility
+      const img = this.querySelector('img');
+      img.alt = type === 'password' ? 'Show Password' : 'Hide Password';
+    });
