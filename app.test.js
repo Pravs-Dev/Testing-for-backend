@@ -51,13 +51,18 @@ app.get('/test', (req, res) => {
   res.send('test');
 });
 
+let userId; // Global variable to store the user ID
+
 describe('User Unit Tests', () => {
+
+  const randomEmail = () => `test${Math.floor(Math.random() * 100000)}@example.com`;
+  const randomName = () => `User${Math.floor(Math.random() * 1000)}`;
+
   it('should return "test"', async () => {
     const res = await request(app).get('/test');
     expect(res.statusCode).toEqual(200);
     expect(res.text).toBe('test');
   });
-
 
   it('should return all users', async () => {
     const res = await request(app).get('/api/users');
@@ -65,8 +70,23 @@ describe('User Unit Tests', () => {
     expect(Array.isArray(res.body)).toBe(true);
   });
 
+  it('should create a new user', async () => {
+    const newUser = {
+      email: randomEmail(), // Generate a random email
+      password: 'password123',
+      fname: randomName(), // Generate a random first name
+      lname: 'Doe',
+      role: 'student'
+    };
+    const res = await request(app).post('/api/users').send(newUser);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.user).toHaveProperty('_id');
+
+    // Store the user ID globally
+    userId = res.body.user._id;
+  });
+
   it('should return a specific user by ID', async () => {
-    const userId = '66e8a4235629979b7e8f6236'; 
     const res = await request(app).get(`/api/users/${userId}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('_id', userId);
@@ -79,233 +99,182 @@ describe('User Unit Tests', () => {
     expect(res.body.message).toBe("Error fetching user");
   });
 
-  it('should create a new user', async () => {
-    const newUser = {
-      email: 'test1@example.com',
-      password: 'password123',
-      fname: 'John',
-      lname: 'Doe',
-      role: 'student'
-    };
-    const res = await request(app).post('/api/users').send(newUser);
-    expect(res.statusCode).toEqual(201);
-    expect(res.body.user).toHaveProperty('_id');
-  });
-
-
-  it('should invalid login a user', async () => {
+  it('should login a user with invalid details', async () => {
     const loginDetails = {
-      email: 'test@example.com',
+      email: 'invaliduser@example.com', // Using invalid email
       password: 'password123'
     };
     const res = await request(app).post('/api/users/login').send(loginDetails);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('token');
+    expect(res.statusCode).toEqual(401); // Expecting unauthorized
   });
 
-  it('should update a user', async () => {
-    const userId = '66e8a4235629979b7e8f6236'; 
+  it('should update the user', async () => {
     const updatedUser = { fname: 'Jane' };
     const res = await request(app).put(`/api/users/${userId}`).send(updatedUser);
     expect(res.statusCode).toEqual(200);
     expect(res.body.fname).toBe('Jane');
   });
-  
 
-  it('should delete a user', async () => {
-    const userId = '66e8c2edc1dd61f97b6bc845'; 
+  it('should delete the user', async () => {
     const res = await request(app).delete(`/api/users/${userId}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toBe('User deleted successfully');
   });
-
-   afterAll((done) => {
-     mongoose.connection.close();
-     done();
-   });
 });
 
 
-describe('Virtualtutoring Unit Tests', () => {
 
-  // it('should return all sessions', async () => {
-  //   const res = await request(app).get('/api/virtualtutoring');
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(Array.isArray(res.body)).toBe(true);
-  // });
+describe('Virtual Tutoring Unit Tests', () => {
+  let sessionId; // Store the sessionId here
 
-  // it('should return a specific session by ID', async () => {
-  //   const sessionId = '66e8cd3cac4c2138d5b1ca37'; 
-  //   const res = await request(app).get(`/api/virtualtutoring/${sessionId}`);
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body).toHaveProperty('_id', sessionId);
-  // });
+  it('should create a new session', async () => {
+    const tutorId = new mongoose.Types.ObjectId();
+    const studentId = new mongoose.Types.ObjectId();
 
-  // it('should return 404 for non-existent session', async () => {
-  //   const nonExistentSessionId = '66e8cd3cac4c2138d5b1ca36';
-  //   const res = await request(app).get(`/api/virtualtutoring/${nonExistentSessionId}`);
-  //   expect(res.statusCode).toEqual(500);
-  //   expect(res.body.message).toBe('Error fetching session');
-  // });
+    const newSession = {
+      tutorId: tutorId.toString(),
+      studentId: studentId.toString(),
+      scheduledTime: '2024-10-01T10:00:00.000Z',
+      videoConferenceUrl: 'https://example.com/conference/' + Math.floor(10000 + Math.random() * 90000),
+      status: 'scheduled',
+      notes: 'A session on advanced algebra'
+    };
 
-  // it('should create a new session', async () => {
-  //   const tutorId = '60c72b2f9b1d8f4d2e3f8d6d'; 
-  //   const studentId = '60c72b2f9b1d8f4d2e3f8d6e'; 
+    const res = await request(app).post('/api/virtualtutoring').send(newSession);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('_id');
+
+    // Store the sessionId for use in the following tests
+    sessionId = res.body._id;
+
+    expect(res.body).toMatchObject({
+      tutorId: newSession.tutorId,
+      studentId: newSession.studentId,
+      scheduledTime: newSession.scheduledTime,
+      videoConferenceUrl: newSession.videoConferenceUrl,
+      status: newSession.status,
+      notes: newSession.notes
+    });
+  });
+
+  it('should return all sessions', async () => {
+    const res = await request(app).get('/api/virtualtutoring');
+    expect(res.statusCode).toEqual(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  it('should return a specific session by ID', async () => {
+    const res = await request(app).get(`/api/virtualtutoring/${sessionId}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('_id', sessionId);
+  });
+
+  it('should return 404 for non-existent session', async () => {
+    const nonExistentSessionId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/api/virtualtutoring/${nonExistentSessionId}`);
+    expect(res.statusCode).toEqual(500);
+    expect(res.body.message).toBe('Error fetching session');
+  });
+
+  it('should update the session', async () => {
+    const updatedSession = { notes: 'Updated Math Tutoring' };
+
+    const res = await request(app)
+      .put(`/api/virtualtutoring/${sessionId}`)
+      .send(updatedSession);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.notes).toBe('Updated Math Tutoring');
+  });
+
+  it('should delete the session', async () => {
+    const res = await request(app).delete(`/api/virtualtutoring/${sessionId}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('Session deleted successfully');
+  });
+
+  afterAll((done) => {
+    mongoose.connection.close();
+    done();
+  });
+
+
+  describe('Bookings Unit Test', () => {
+    let bookingId; // Variable to store the bookingId
   
-  //   const newSession = {
-  //     tutorId: tutorId,
-  //     studentId: studentId,
-  //     scheduledTime: '2024-10-01T10:00:00.000Z',
-  //     videoConferenceUrl: 'https://example.com/conference/12345',
-  //     status: 'scheduled',
-  //     notes: 'A session on advanced algebra'
-  //   };
+    // Create a new booking before all tests
+    beforeAll(async () => {
+      const newBooking = {
+        student: '64e5e2c6c5e6f1a0d0d1e4b0', 
+        tutor: '64e5e2c6c5e6f1a0d0d1e4b1', 
+        subject: 'Advanced Algebra',
+        sessionDate: '2024-10-01T00:00:00.000Z',
+        sessionTime: '10:00 AM',
+        duration: 60,
+      };
   
-  //   const res = await request(app).post('/api/virtualtutoring').send(newSession);
-    
-  //   expect(res.statusCode).toEqual(201);
-  //   expect(res.body).toHaveProperty('_id');
-  //   expect(res.body).toMatchObject({
-  //     tutorId: newSession.tutorId,
-  //     studentId: newSession.studentId,
-  //     scheduledTime: newSession.scheduledTime,
-  //     videoConferenceUrl: newSession.videoConferenceUrl,
-  //     status: newSession.status,
-  //     notes: newSession.notes
-  //   });
-  // });
-
-  // it('should update a session', async () => {
-  //   const sessionId = '66e8cd3cac4c2138d5b1ca37'; 
-  //   const updatedSession = { notes: 'Updated Math Tutoring' };
+      const res = await request(app).post('/api/bookings').send(newBooking);
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('_id');
   
-  //   const res = await request(app)
-  //     .put(`/api/virtualtutoring/${sessionId}`)
-  //     .send(updatedSession);
+      // Store the bookingId for use in the following tests
+      bookingId = res.body._id;
+    });
   
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.notes).toBe('Updated Math Tutoring');
-  // });
-
-  // it('should delete a session', async () => {
-  //   const sessionId = '66e8cd3cac4c2138d5b1ca37'; 
-  //   const res = await request(app).delete(`/api/virtualtutoring/${sessionId}`);
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.message).toBe('Session deleted successfully');
-  // });
-  // afterAll((done) => {
-  //   mongoose.connection.close();
-  //   done();
-  // });
-
-
-
-  // describe('Bookings Unit Test', () => {
-  //   let bookingId = '66e8a4e25629979b7e8f628f';
+    it('should create a new booking', async () => {
+      const newBooking = {
+        student: '64e5e2c6c5e6f1a0d0d1e4b0', 
+        tutor: '64e5e2c6c5e6f1a0d0d1e4b1', 
+        subject: 'Advanced Algebra',
+        sessionDate: '2024-10-01T00:00:00.000Z',
+        sessionTime: '10:00 AM',
+        duration: 60,
+      };
   
-  //   // Create a new booking before tests
-  //   beforeAll(async () => {
-  //     const res = await request(app)
-  //       .post('/api/bookings')
-  //       .send({
-  //         tutorId: '001',
-  //         studentId: '002',
-  //         sessionId: '002',
-  //         scheduledTime: '2024-10-01T10:00:00Z'
-  //       });
-  //     bookingId = res.body._id;
-  //   });
+      const res = await request(app).post('/api/bookings').send(newBooking);
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('_id');
+      expect(res.body.subject).toBe(newBooking.subject);
+      expect(new Date(res.body.sessionDate).toISOString()).toBe(newBooking.sessionDate);
+      expect(res.body.sessionTime).toBe(newBooking.sessionTime);
+      expect(res.body.duration).toBe(newBooking.duration);
+    });
   
-  //   it('should create a new booking', async () => {
-  //     const newBooking = {
-  //       student: '64e5e2c6c5e6f1a0d0d1e4b0', 
-  //       tutor: '64e5e2c6c5e6f1a0d0d1e4b1', 
-  //       subject: 'Advanced Algebra',
-  //       sessionDate: '2024-10-01T00:00:00.000Z',
-  //       sessionTime: '10:00 AM',
-  //       duration: 60,
-  //     };
-      
-  //     const res = await request(app).post('/api/bookings').send(newBooking);
-      
-  //     expect(res.statusCode).toEqual(201);
-  //     expect(res.body).toHaveProperty('_id');
-  //     expect(res.body.subject).toBe(newBooking.subject);
-  //     expect(new Date(res.body.sessionDate).toISOString()).toBe(newBooking.sessionDate);
-  //     expect(res.body.sessionTime).toBe(newBooking.sessionTime);
-  //     expect(res.body.duration).toBe(newBooking.duration);
-  //   });
+    it('should get all bookings', async () => {
+      const res = await request(app).get('/api/bookings');
+      expect(res.statusCode).toEqual(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
   
-  //   it('should get all bookings', async () => {
-  //     const res = await request(app).get('/api/bookings');
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(Array.isArray(res.body)).toBe(true);
-  //   });
+    it('should get a booking by ID', async () => {
+      const res = await request(app).get(`/api/bookings/${bookingId}`);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('_id', bookingId);
+    });
   
-  //   it('should get a booking by ID', async () => {
-  //     const bookid = '66e8d9c10520ed18c5b83183';
-  //     const res = await request(app).get(`/api/bookings/${bookid}`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body).toHaveProperty('_id', bookid);
-  //   });
+    it('should update or cancel the booking', async () => {
+      const updatedBooking = { 
+        status: 'Completed', 
+        cancellationReason: 'No longer needed' 
+      };
   
-  //   it('should update or cancel a booking', async () => {
-  //     const bookingId = '66e8d9c10520ed18c5b83183'; 
-  //     const updatedBooking = { 
-  //       status: 'Completed', 
-  //       cancellationReason: 'No longer needed' 
-  //     };
+      const res = await request(app).put(`/api/bookings/${bookingId}`).send(updatedBooking);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.status).toBe(updatedBooking.status);
+      expect(res.body.cancellationReason).toBe(updatedBooking.cancellationReason);
+    });
   
-  //     const res = await request(app).put(`/api/bookings/${bookingId}`).send(updatedBooking);
-      
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.status).toBe(updatedBooking.status);
-  //     expect(res.body.cancellationReason).toBe(updatedBooking.cancellationReason);
-  //   });
-
+    it('should delete the booking', async () => {
+      const res = await request(app).delete(`/api/bookings/${bookingId}`);
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.message).toBe('Booking deleted successfully');
+    });
   
-  //   it('should delete a booking', async () => {
-  //     const bookingId = '66e8d9c10520ed18c5b83183'; 
-  //     const res = await request(app).delete(`/api/bookings/${bookingId}`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.message).toBe('Booking deleted successfully');
-  //   });
-  //     afterAll((done) => {
-  //   mongoose.connection.close();
-  //   done();
-  // });
-  // });
+    afterAll((done) => {
+      mongoose.connection.close();
+      done();
+    });
+  });
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 });
