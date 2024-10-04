@@ -12,6 +12,7 @@ import notificationRoutes from './Routes/Notification_Routes/NotificationR.js';
 import virtualtutoringRoutes from './Routes/VirtualTutoring_Routes/VirtualTutoringR.js';
 import availibilityRoutes from './Routes/Availability_Routes/AvailabilityR.js';
 import feetbackRroutes from './Routes/Feedback_Routes/FeedbackR.js';
+import coursesRoutes from './Routes/Courses_Route/CoursesR.js';
 import './Authentication/passport.js';
 import { authenticateToken} from './tokenmiddleware.js'; 
 
@@ -51,6 +52,7 @@ app.use('/api/virtualtutoring', virtualtutoringRoutes);
 app.use('/api/resourcesfile', resourcefileRoutes);
 app.use('/api/availability', availibilityRoutes);
 app.use('/api/feedback', feetbackRroutes);
+app.use('/api/courses', coursesRoutes);
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
