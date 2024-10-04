@@ -152,7 +152,7 @@ describe('User Unit Tests', () => {
   it('should login a user with invalid details', async () => {
     const loginDetails = {
       email: 'invaliduser@example.com', // Using invalid email
-      password: 'password123'
+      password: 'Password123!'//passes check 
     };
     const res = await request(app).post('/api/users/login').send(loginDetails);
     expect(res.statusCode).toEqual(401); // Expecting unauthorized
