@@ -5,8 +5,7 @@
   "description": "The Smart Campus System aims to revolutionize university life by integrating various aspects of campus operations into a seamless, user-friendly platform. This system will enhance the experience of students, faculty, and staff by providing efficient, accessible, and interconnected services. Each component of the system will be managed by dedicated teams, ensuring specialized focus and comprehensive development.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "jest --detectOpenHandles --coverage"
+     "test": "jest --detectOpenHandles --coverage"
   },
   "keywords": [],
   "author": "",

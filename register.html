@@ -62,8 +62,8 @@
                     </div>
                     <div class="input-group" id="courses-group">
                         <label for="courses">Courses</label>
-                        <input type="text" id="courses" name="courses[]" placeholder="Enter your course">
-                        <span class="add-more" id="add-more-courses">+ Add more</span>
+                        <input type="text" id="courses" name="courses[]" placeholder="Please click to add courses">
+                        <span class="add-more" id="add-more-courses">.</span>
                     </div>
                 </div>
 
@@ -80,12 +80,12 @@
                     <div class="input-group" id="subjects-group">
                         <label for="subjects">Subjects</label>
                         <input type="text" id="subjects" name="subjects[]" placeholder="Enter a subject you teach">
-                        <span class="add-more" id="add-more-subjects">+ Add more</span>
+                        <span class="add-more" id="add-more-subjects"></span>
                     </div>
                     <div class="input-group" id="qualification-group">
                         <label for="qualifications">Qualification</label>
                         <input type="text" id="qualification" name="qualification[]" placeholder="Enter a qualification">
-                        <span class="add-more" id="add-more-qualifications">+ Add more</span>
+                        <span disabled class="add-more" id="add-more-qualifications">+ Add more</span>
                     </div>
                 </div>
 
@@ -150,7 +150,7 @@
             const newCourse = document.createElement('div');
             newCourse.classList.add('input-group');
             newCourse.innerHTML = `
-                <input type="text" name="courses[]" placeholder="Enter another course">
+                <input type="text" name="courses[]" placeholder="Enter another course" disabled>
                 <span class="remove" onclick="removeField(this)">- Remove</span>
             `;
             coursesGroup.appendChild(newCourse);
@@ -186,6 +186,30 @@
             inputGroup.parentElement.removeChild(inputGroup);
         }
     </script>
+    <script>
+        // On page load, check if a module is stored in localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedModule = localStorage.getItem('selectedModule');
+            if (selectedModule) {
+                // Find the courses input
+                const coursesInput = document.getElementById('courses');
+                
+                // If there's already a value in the courses input, append the new course
+                if (coursesInput.value) {
+                    coursesInput.value += `, ${selectedModule}`;
+                } else {
+                    // Otherwise, just set the first selected course
+                    coursesInput.value = selectedModule;
+                }
+    
+                // Clear the module from localStorage after setting it
+                localStorage.removeItem('selectedModule');
+            }
+        });
+    </script>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./Client-servers/register.js"></script>
 </body>
 </html>
