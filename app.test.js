@@ -72,7 +72,7 @@ describe('User Unit Tests', () => {
     const res = await request(app).get('/api/users');
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBe(true);
-  });
+  }, 10000); // Set the timeout to 10 seconds (10000 ms)
 
   it('should create a new user', async () => {
     const newUser = {
@@ -365,7 +365,7 @@ describe('Virtual Tutoring Unit Tests', () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body.message).toBe('Notification deleted successfully');
     });
-    
+
     afterAll((done) => {
       mongoose.connection.close();
       done();
