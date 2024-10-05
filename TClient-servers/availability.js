@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Navailability.push({date: date, slots: slots});
                     }
 
+                    if(isValidInput(Navailability)){
                     if(availability.length !=0){
                         
                     const availData = {
@@ -138,6 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             //reload the page
                             location.reload();
                     }
+                    }
+                    
                 });
 
             
@@ -163,4 +166,85 @@ function availabileDays(){
     }
     return days.sort();
 
+}
+
+function isValidInput(availabilities) {
+    let isValid = true;
+    availabilities.forEach(availability => {
+        
+        for(let i=0; i<2; i++){
+            if(availability.slots[i].start != '' && availability.slots[(i+1)%3].start != '' && availability.slots[(i+1)%3].end != ''){
+                if( parseInt((availability.slots[i].end).split(':')[0]) > parseInt((availability.slots[(i+1)%3].start).split(':')[0]) ){
+                    isValid = false;
+                    confirm('Slots overlap or are not in order in: '+ availability.date);
+                    return isValid;
+                }
+                else if(parseInt((availability.slots[i].end).split(':')[0]) == parseInt((availability.slots[(i+1)%3].start).split(':')[0])){
+                    if(parseInt((availability.slots[i].end).split(':')[1]) > parseInt((availability.slots[(i+1)%3].start).split(':')[1])){
+                        isValid = false;
+                        confirm('Slots overlap or are not in order in: '+ availability.date);
+                        return isValid;
+                    }
+                }
+            }
+        }
+        availability.slots.forEach(slot => {
+            if (slot.start != '' && slot.end != '') {
+                if(slot.start === '' || slot.end === ''){
+                    isValid = false;
+                    return isValid;
+                }
+                else if (slot.start >= slot.end) {
+                    isValid = false;
+                    confirm('Start time after or too close to end time in: '+ availability.date);
+                    return isValid;
+                }
+                else if (slot.start < '08:00'  ) {
+                    isValid = false;
+                    confirm('Start time too early in: '+ availability.date);
+                    return isValid;
+                }
+                else if(slot.start > '20:00'){
+                    isValid = false;
+                    confirm('Start time too late in: '+ availability.date);
+                    return isValid;
+                }
+                else if(slot.end > '21:00' ){
+                    isValid = false;
+                    confirm('End time too late in: '+ availability.date);
+                    return isValid;
+                }
+                else if(slot.end < '09:00'){
+                    isValid = false;
+                    confirm('End time too early in: '+ availability.date);
+                    return isValid;
+                }
+                else if(parseInt((slot.start).split(':')[0])<(parseInt((slot.end).split(':')[0]) - 2)){
+                    isValid = false;
+                    confirm('Slot too long (maximum 2 hours) in: '+ availability.date);
+                    return isValid;
+                }
+                else if(parseInt((slot.start).split(':')[0])==(parseInt((slot.end).split(':')[0]) - 2)){
+                    if(parseInt((slot.start).split(':')[1])<parseInt((slot.end).split(':')[1])){
+                        isValid = false;
+                        confirm('Slot too long (maximum 2 hours) in: '+ availability.date);
+                        return isValid;
+                    }
+                }
+                else if(parseInt((slot.start).split(':')[0]) > (parseInt((slot.end).split(':')[0]) -1)){
+                    isValid = false;
+                    confirm('Slot too short (minimum 1 hour) in: '+ availability.date);
+                    return isValid;
+                }
+                else if(parseInt((slot.start).split(':')[0]) == (parseInt((slot.end).split(':')[0]) -1)){
+                    if(parseInt((slot.start).split(':')[1])>parseInt((slot.end).split(':')[1])){
+                        isValid = false;
+                        confirm('Slot too short (minimum 1 hour) in: '+ availability.date);
+                        return isValid;
+                    }
+                }
+            }
+        });
+    });
+    return isValid;
 }
