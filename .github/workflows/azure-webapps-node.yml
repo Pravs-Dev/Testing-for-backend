@@ -56,8 +56,8 @@ jobs:
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  # Make sure to set this secret in your repository
-          auth-type: 'IDENTITY'  # Changed to IDENTITY
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  # Ensure this secret is set
+          auth-type: 'IDENTITY'  # Using federated identity
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
