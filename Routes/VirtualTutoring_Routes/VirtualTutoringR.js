@@ -4,7 +4,8 @@ import {
   getAllSessions,
   getSessionById,
   modifySession,
-  deleteSessionById
+  deleteSessionById,
+  getSessionsByStudentId
 } from '../../Controllers/VirtualTutoring_Controller/VirtualTutoringC.js';
 
 const router = express.Router();
@@ -71,6 +72,21 @@ router.delete('/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Error deleting session', error: error.message });
+  }
+});
+
+router.get('/student/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  try {
+    console.log("Fetching sessions for student:", studentId); // Debug log
+    const sessions = await getSessionsByStudentId(studentId);
+    if (sessions.length > 0) {
+      res.status(200).json(sessions);
+    } else {
+      res.status(404).json({ message: 'No sessions found for this student' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching sessions', error: error.message });
   }
 });
 
