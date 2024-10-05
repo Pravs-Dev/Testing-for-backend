@@ -18,18 +18,13 @@ const virtualTutoringSchema = new mongoose.Schema({
   },
 
   scheduledDate: {
-    type: Date,
+    type: String,
     required: true,
   },
 
   videoConferenceUrl: {
     type: String,
     required: true,
-  },
-  status: {
-    type: String,
-    enum: ['scheduled', 'completed', 'canceled'],
-    default: 'scheduled'
   },
   notes: {
     type: String

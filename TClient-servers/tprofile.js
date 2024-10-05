@@ -395,7 +395,8 @@ async function fetchFacultiesForSwal(currentCourses) {
 
 // Fetch the user's current courses
 async function getCurrentCourses() {
-    //const API_BASE_URL = 'https://finalbackend2099.azurewebsites.net/api';
+
+
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     try {
@@ -424,7 +425,7 @@ async function saveUpdatedCourses(courses) {
     const token = localStorage.getItem('token');
     const formData = new FormData();
 
-    formData.append('courses', courses.join(', '));
+    formData.append('subjects', courses.join(', '));
 
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
